@@ -36,44 +36,5 @@ namespace Web.Controllers
 
             return View();
         }
-
-        public void FromParameter(string name, int age)
-        {
-            var person = new PersonViewModel 
-            { 
-                Name = name, Age = age 
-            };
-        }
-
-        public void FromFormCollection(FormCollection form)
-        {
-            var person = new PersonViewModel
-            {
-                Name = form["name"], Age = int.Parse(form["age"])
-            };
-        }
-
-        public void FromRequest()
-        {
-            var person = new PersonViewModel
-            {
-                Name = Request.Form["name"],
-                Age = int.Parse(Request.Form["age"])
-            };
-        }
-
-        public void FromComplexType(PersonViewModel model)
-        {
-            var person = new PersonViewModel
-            {
-                Name = model.Name, Age = model.Age
-            };
-        }
-    }
-
-    public class PersonViewModel
-    {
-        public string Name { get; set; }
-        public int Age { get; set; }
     }
 }
