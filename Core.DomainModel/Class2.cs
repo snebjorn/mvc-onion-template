@@ -8,8 +8,7 @@ namespace Core.DomainModel
 {
     class Class2
     {
-        public int Asdf { get; set; }
+        public string Asdf { get; set; }
         public string Dinmor { get; set; }
-        
     }
 }
