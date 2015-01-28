@@ -4,11 +4,11 @@ using System.Data.Entity;
 
 namespace Infrastructure.Data
 {
-    public class SampleSeedInitializer : DropCreateDatabaseIfModelChanges<SampleContext>
+    public class SampleSeedInitializer : DropCreateDatabaseAlways<SampleContext>
     {
         protected override void Seed(SampleContext context)
         {
-            var item = new Test() { CreatedOn = DateTime.Now, ModifiedOn = DateTime.UtcNow };
+            var item = new Test() { CreatedOn = DateTime.Now, ModifiedOn = DateTime.Now };
             context.Tests.Add(item);
             context.SaveChanges();
         }
