@@ -288,9 +288,9 @@
       <Project>{2b159f69-9712-4b07-8858-4e4b212f2228}</Project>
       <Name>Core.DomainServices</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Infrastructure.Data\Infrastructure.Data.csproj">
+    <ProjectReference Include="..\Infrastructure.DataAccess\Infrastructure.DataAccess.csproj">
       <Project>{2728d50f-0a00-400a-bc4d-3abd342c1682}</Project>
-      <Name>Infrastructure.Data</Name>
+      <Name>Infrastructure.DataAccess</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
