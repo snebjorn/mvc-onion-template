@@ -35,11 +35,11 @@ namespace Infrastructure.Data
             }
         }
 
-        public Task<int> SaveAsync()
+        public async Task<int> SaveAsync()
         {
             try
             {
-                return _context.SaveChangesAsync();
+                return await _context.SaveChangesAsync();
             }
             catch (DbEntityValidationException dbEx) // verbose failure message
             {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.DomainModel
 {
-    public interface IIdentifier
+    public interface IEntity
     {
         int Id { get; set; }
     }

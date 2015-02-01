@@ -14,7 +14,7 @@ namespace Infrastructure.Data
         where T : class
     {
         private readonly SampleContext _context;
-        private readonly IDbSet<T> _dbSet;
+        private readonly DbSet<T> _dbSet;
 
         public GenericRepository(SampleContext context)
         {
@@ -23,6 +23,16 @@ namespace Infrastructure.Data
         }
 
         public IEnumerable<T> Get(
+            Expression<Func<T, bool>> filter = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+            string includeProperties = "",
+            int? page = null,
+            int? pageSize = null)
+        {
+            return GetAsync(filter, orderBy, includeProperties, page, pageSize).Result;
+        }
+
+        public async Task<IEnumerable<T>> GetAsync(
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
             string includeProperties = "",
@@ -48,11 +58,11 @@ namespace Infrastructure.Data
                     .Skip((page.Value - 1) * pageSize.Value)
                     .Take(pageSize.Value);
 
-            return query.ToList();
+            return await query.ToListAsync();
         }
 
         // Last resort!
-        // It's best practive to not rely on your ORM to implement IQueryable
+        // It's best practice to not rely on your ORM to implement IQueryable
         //public IQueryable<T> AsQueryable()
         //{
         //    return _dbSet.AsQueryable();
@@ -71,6 +81,11 @@ namespace Infrastructure.Data
         public T GetByKey(params object[] key)
         {
             return _dbSet.Find(key);
+        }
+
+        public async Task<T> GetByKeyAsync(params object[] key)
+        {
+            return await _dbSet.FindAsync(key);
         }
 
         public T Insert(T entity)
@@ -99,12 +114,17 @@ namespace Infrastructure.Data
 
         public int Count(Expression<Func<T, bool>> filter = null)
         {
+            return CountAsync(filter).Result;
+        }
+
+        public async Task<int> CountAsync(Expression<Func<T, bool>> filter = null)
+        {
             IQueryable<T> query = _dbSet;
 
             if (filter != null)
                 query = query.Where(filter);
 
-            return query.Count();
+            return await query.CountAsync();
         }
     }
 }

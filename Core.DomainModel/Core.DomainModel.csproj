@@ -55,8 +55,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationUser.cs" />
-    <Compile Include="Class1.cs" />
-    <Compile Include="Class2.cs" />
     <Compile Include="ICreatedOn.cs" />
     <Compile Include="IIdentifier.cs" />
     <Compile Include="IModifiedOn.cs" />

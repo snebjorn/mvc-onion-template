@@ -10,9 +10,9 @@ namespace Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IGenericRepository<Test> _repo;
+        private readonly IGenericRepository<Student> _repo;
 
-        public HomeController(IGenericRepository<Test> repo)
+        public HomeController(IGenericRepository<Student> repo)
         {
             _repo = repo;
         }
