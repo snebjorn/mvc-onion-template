@@ -29,7 +29,8 @@ namespace Infrastructure.Data
             int? page = null,
             int? pageSize = null)
         {
-            return GetAsync(filter, orderBy, includeProperties, page, pageSize).Result;
+            IQueryable<T> query = FilterLogic(filter, orderBy, includeProperties, page, pageSize);
+            return query.ToList();
         }
 
         public async Task<IEnumerable<T>> GetAsync(
@@ -38,6 +39,12 @@ namespace Infrastructure.Data
             string includeProperties = "",
             int? page = null,
             int? pageSize = null)
+        {
+            IQueryable<T> query = FilterLogic(filter, orderBy, includeProperties, page, pageSize);
+            return await query.ToListAsync();
+        }
+
+        private IQueryable<T> FilterLogic(Expression<Func<T, bool>> filter, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy, string includeProperties, int? page, int? pageSize)
         {
             IQueryable<T> query = _dbSet;
 
@@ -57,8 +64,7 @@ namespace Infrastructure.Data
                 query = query
                     .Skip((page.Value - 1) * pageSize.Value)
                     .Take(pageSize.Value);
-
-            return await query.ToListAsync();
+            return query;
         }
 
         // Last resort!
@@ -114,7 +120,12 @@ namespace Infrastructure.Data
 
         public int Count(Expression<Func<T, bool>> filter = null)
         {
-            return CountAsync(filter).Result;
+            IQueryable<T> query = _dbSet;
+
+            if (filter != null)
+                query = query.Where(filter);
+
+            return query.Count();
         }
 
         public async Task<int> CountAsync(Expression<Func<T, bool>> filter = null)

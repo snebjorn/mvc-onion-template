@@ -19,7 +19,6 @@ namespace Web.Controllers
 
         public ActionResult Index()
         {
-            var a = _repo.Get();
             return View();
         }
 

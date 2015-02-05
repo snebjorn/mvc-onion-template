@@ -14,14 +14,9 @@ namespace Infrastructure.Data
         public SampleContext()
             : base("DefaultConnection")
         {
-            // this could probably be made a better way
-            if (Database.Exists())
-                Database.SetInitializer<SampleContext>(new CreateSampleSeedInitializer());
-            else
-                Database.SetInitializer<SampleContext>(new ChangeSampleSeedInitializer());
         }
 
-        public IDbSet<Student> Tests { get; set; }
+        public IDbSet<Student> Students { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

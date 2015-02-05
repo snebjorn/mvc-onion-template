@@ -25,7 +25,7 @@ namespace Infrastructure.Data
         public static void Seed(SampleContext context)
         {
             var item = new Student() { CreatedOn = DateTime.Now, ModifiedOn = DateTime.Now };
-            context.Tests.Add(item);
+            context.Students.Add(item);
             context.SaveChanges();
         }
     }
