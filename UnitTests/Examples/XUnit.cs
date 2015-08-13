@@ -1,8 +1,9 @@
-﻿using Xunit;
+﻿using System;
+using Xunit;
 
 namespace UnitTests.Examples
 {
-    public class XUnit
+    public class XUnit : IDisposable 
     {
         // http://xunit.github.io/docs/getting-started.html
         // Basic use of xUnit for creating unit tests.
@@ -12,6 +13,7 @@ namespace UnitTests.Examples
             /* Instead of [SetUp] & [TearDown], xUnit instead uses the constructor,
              * as the class is instantiated each time a test is called.
              * For [TearDown] you can implement IDisposable.Dispose as a replacement.
+             * xUnit instantiates a new class for each test case.
              */
         }
 
@@ -36,7 +38,8 @@ namespace UnitTests.Examples
         }
 
         // Theories are tests which are only true for a particular set of data.
-        // Runs seperate tests for each of the InlineData lines.
+        // Runs seperate tests for each of the InlineData lines, which makes it easy to run several times,
+        // with different arguments.
         [Theory]
         [InlineData(3)] 
         [InlineData(5)]
@@ -49,6 +52,11 @@ namespace UnitTests.Examples
         static bool IsOdd(int value)
         {
             return value%2 == 1;
+        }
+
+        public void Dispose()
+        {
+            // Put [TearDown] code here.
         }
     }
 }

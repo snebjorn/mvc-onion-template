@@ -1,5 +1,6 @@
 ﻿using System;
 using NSubstitute;
+using UnitTests.Examples.Classes;
 using Xunit;
 
 namespace UnitTests.Examples
@@ -17,9 +18,10 @@ namespace UnitTests.Examples
         public NSubstitute()
         {
             _calculator = Substitute.For<ICalculator>();
+
         }
 
-        // How to set up a function on a substitute to a specific return value.
+        // Example of setting a return value to a substitute.
         [Fact]
         public void CalculatorAdd()
         {
@@ -27,6 +29,7 @@ namespace UnitTests.Examples
             Assert.Equal(_calculator.Add(1, 2), 3);
         }
 
+        // Example of setting a return value to a substitute.
         [Fact]
         public void CalculatorMode()
         {
@@ -34,6 +37,8 @@ namespace UnitTests.Examples
             Assert.Equal(_calculator.Mode, "DEC");
         }
 
+        // Defining several arguments to Returns, will return them in that sequence when called
+        // several times.
         [Fact]
         public void CalculatorReturnSequence()
         {
@@ -52,6 +57,8 @@ namespace UnitTests.Examples
             _calculator.DidNotReceive().Add(5, 7);
         }
 
+        // Test that tests whether the function was called with 10 as the first argument
+        // and with negative second argument.
         [Fact]
         public void CalculatorAddWithTen()
         {
@@ -70,9 +77,10 @@ namespace UnitTests.Examples
             Assert.True(eventWasRaised);
         }
 
+        // Substitutes are created from interfaces.
         public interface ICalculator
         {
-            int Add(int a, int b);
+            int Add (int a, int b);
             string Mode { get; set; }
             event Action PoweringUp;
         }
