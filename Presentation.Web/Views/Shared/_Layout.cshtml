@@ -24,11 +24,19 @@
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+
+                    <!-- Test -->
+        <!--
+        <li>@Html.ActionLink("WindowsAuthenticationExample", "WindowsAuthenticationExample", "Home")</li>
+        <li>@Html.ActionLink("Authorize", "AuthorizeAction", "Home")</li>
+        -->
+
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
     </div>
+    
     <div class="container body-content">
         @RenderBody()
         <hr />
