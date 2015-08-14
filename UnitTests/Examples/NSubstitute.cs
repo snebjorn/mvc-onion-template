@@ -1,6 +1,5 @@
 ﻿using System;
 using NSubstitute;
-using UnitTests.Examples.Classes;
 using Xunit;
 
 namespace UnitTests.Examples

@@ -1,3 +1,5 @@
+using Core.DomainModel;
+
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Web.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(Web.App_Start.NinjectWebCommon), "Stop")]
 
@@ -66,6 +68,11 @@ namespace Web.App_Start
             kernel.Bind<SampleContext>().ToSelf().InRequestScope();
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
             kernel.Bind(typeof(IGenericRepository<>)).To(typeof(GenericRepository<>));
+
+            // Repos
+            kernel.Bind<IGenericRepository<Student>>().To<GenericRepository<Student>>();
+
+
         }
     }
 }

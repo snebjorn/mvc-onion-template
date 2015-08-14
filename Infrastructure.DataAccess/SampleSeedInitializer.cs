@@ -24,7 +24,7 @@ namespace Infrastructure.Data
     {
         public static void Seed(SampleContext context)
         {
-            var item = new Student() { CreatedOn = DateTime.Now, ModifiedOn = DateTime.Now };
+            var item = new Student() { Name = Faker.Name.First(), CreatedOn = DateTime.Now, ModifiedOn = DateTime.Now };
             context.Students.Add(item);
             context.SaveChanges();
         }

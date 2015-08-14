@@ -21,7 +21,7 @@ namespace Core.DomainServices
             string includeProperties = "",
             int? page = null,
             int? pageSize = null);
-        //IQueryable<T> AsQueryable();
+        IQueryable<T> AsQueryable();
         T Create();
         T GetByKey(params object[] key);
         Task<T> GetByKeyAsync(params object[] key);

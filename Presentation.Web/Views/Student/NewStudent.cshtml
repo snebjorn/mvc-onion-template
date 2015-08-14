@@ -1,0 +1,15 @@
+﻿@model Web.Models.StudentViewModel
+@{
+    ViewBag.Title = "NewStudent";
+}
+
+<h2>New Student</h2>
+
+@if (Model != null && Model.Name != null)
+{
+    <p>Student with the name of: @Model.Name, was created. </p>
+}
+else
+{
+    <p>Nothing to see here.</p>
+}

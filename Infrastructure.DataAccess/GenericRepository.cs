@@ -69,10 +69,10 @@ namespace Infrastructure.Data
 
         // Last resort!
         // It's best practice to not rely on your ORM to implement IQueryable
-        //public IQueryable<T> AsQueryable()
-        //{
-        //    return _dbSet.AsQueryable();
-        //}
+        public IQueryable<T> AsQueryable()
+        {
+            return _dbSet.AsQueryable();
+        }
 
         public T Create()
         {

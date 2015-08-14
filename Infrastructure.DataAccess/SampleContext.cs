@@ -9,7 +9,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Infrastructure.Data
 {
-    public class SampleContext : DbContext //IdentityDbContext<ApplicationUser>
+    public class SampleContext : IdentityDbContext<ApplicationUser>
     {
         public SampleContext()
             : base("DefaultConnection")
@@ -17,6 +17,7 @@ namespace Infrastructure.Data
         }
 
         public IDbSet<Student> Students { get; set; }
+        public IDbSet<Teacher> Teachers { get; set; } 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

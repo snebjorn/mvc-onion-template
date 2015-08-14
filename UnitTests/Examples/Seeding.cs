@@ -1,76 +1,77 @@
-﻿using System.Data.Entity.Migrations;
-using System.Linq;
-using UnitTests.Examples.Classes;
-using UnitTests.Examples.Interfaces;
+﻿using System;
+using Core.DomainModel;
+using Core.DomainServices;
 
 namespace UnitTests.Examples
 {
     public class Seeding
     {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IGenericRepository<Student> _studentRepository;
+        private readonly IGenericRepository<Teacher> _teacherRepository;
         /*
          * Examples of functions that uses Faker.Net to generate data and 
          * seed a context with either departments or employees.
          * The functions uses a interface as argument, so either give your context this interface
          * or change the class, and adapt/change the functions to match the context you want to seed.
-         * 
-         * Seeding.SeedDepartments(context);
-         * Seeding.SeedEmployee(context);
          */
 
-        // Adds a department to the context.
-        public static void SeedDepartment(IDbContext context)
+        public Seeding(IUnitOfWork unitOfWork, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository)
         {
-            context.Departments.AddOrUpdate(
-                 d => d.Name, // Defined uniquely by its name.
-                    new Department
-                    {
-                        Name = Faker.Company.Name()
-                    }
-                 );
-
-            context.SaveChanges();
+            _unitOfWork = unitOfWork;
+            _studentRepository = studentRepository;
+            _teacherRepository = teacherRepository;
         }
 
-        // Adds departments to the context.
-        public static void SeedDepartments(IDbContext context)
+        // Adds a student to the context.
+        public void SeedStudent()
         {
-            context.Departments.AddOrUpdate(
-                d => d.Name,
-                    Enumerable.Range(1, 10).Select(x => new Department
-                    {
-                        Name = Faker.Company.Name()
-                    }).ToArray()
-                );
-
-            context.SaveChanges();
+            _studentRepository.Insert(CreateStudent());
+            _unitOfWork.Save();
         }
 
-        // Adds a employee to the context
-        public static void SeedEmployee(IDbContext context)
+        // Adds students to the context.
+        public void SeedStudents(int amount)
         {
-            context.Employees.AddOrUpdate(
-                new Employee
-                    {
-                        FirstName = Faker.Name.First(),
-                        LastName = Faker.Name.Last()
-                    }
-                );
-
-            context.SaveChanges();
+            for (var i = 0; i <= amount; i++) { 
+                _studentRepository.Insert(CreateStudent());
+            }
+            _unitOfWork.Save();
         }
 
-        // Adds employees to the context.
-        public static void SeedEmployees(IDbContext context)
+        // Adds a teacher to the context
+        public void SeedTeacher()
         {
-            context.Employees.AddOrUpdate(
-                Enumerable.Range(1, 10).Select(x => new Employee 
-                    { 
-                        FirstName = Faker.Name.First(), 
-                        LastName = Faker.Name.Last() 
-                    }).ToArray()
-                );
+            _teacherRepository.Insert(CreateTeacher());
+            _unitOfWork.Save();
+        }
 
-            context.SaveChanges();
+        // Adds teachers to the context.
+        public void SeedTeachers(int amount)
+        {
+            for (var i = 0; i <= amount; i++)
+            {
+                _teacherRepository.Insert(CreateTeacher());
+            }
+            _unitOfWork.Save();
+        }
+
+        private Student CreateStudent()
+        {
+            return new Student()
+            {
+                Name = Faker.Company.Name(),
+                CreatedOn = DateTime.Now,
+                ModifiedOn = DateTime.Now
+            };
+        }
+
+        private Teacher CreateTeacher()
+        {
+            return new Teacher()
+            {
+                Name = Faker.Company.Name()
+            };
         }
     }
 }
