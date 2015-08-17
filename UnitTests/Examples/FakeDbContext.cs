@@ -25,14 +25,14 @@ namespace UnitTests.Examples
         private readonly IUnitOfWork _unitOfWork;
 
         // Usage of Faker.Net to generate random variables.
-        private readonly string _studentName1 = Name.First();
-        private readonly string _studentName2 = Name.First();
+        private readonly string _studentName1 = Faker.Name.First();
+        private readonly string _studentName2 = Faker.Name.First();
             
         public FakeDbContext()
         {
             // Example: https://msdn.microsoft.com/en-us/data/dn314429
 
-            // Create fake context and populate it with some fake data.
+            // Create fake context and populate it with some fake data. (Add more data as needed.)
             var substituteDbSet = Substitute.For<IDbSet<Student>>();
             var studentList = new List<Student>()
             {
@@ -61,7 +61,7 @@ namespace UnitTests.Examples
         }
 
         [Fact]
-        public void ContextStudentNameTest()
+        public void IndexStudentsByNameTest()
         {
             var res = _controller.IndexStudentsByName();
 
@@ -70,7 +70,7 @@ namespace UnitTests.Examples
         }
         
         [Fact]
-        public void ContextStudentIdTest()
+        public void IndexStudentsByIdTest()
         {
             var res = _controller.IndexStudentsById();
 
@@ -79,7 +79,7 @@ namespace UnitTests.Examples
         }
 
         [Fact]
-        public void TestNewStudent()
+        public void NewStudentTest()
         {
             var model = new StudentViewModel() { Name = Name.First() };
             _controller.NewStudent(model);
@@ -89,7 +89,7 @@ namespace UnitTests.Examples
         }
 
         [Fact]
-        public void TestFindStudent()
+        public void FindStudentTest()
         {
             var res = _controller.FindStudent(0);
 

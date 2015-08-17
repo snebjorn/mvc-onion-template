@@ -17,6 +17,11 @@ namespace UnitTests.Examples
              */
         }
 
+        public void Dispose()
+        {
+            // Put [TearDown] code here.
+        }
+
         // Facts are tests which are always true. They test invariant conditions.
         [Fact]
         public void PassTest()
@@ -49,14 +54,10 @@ namespace UnitTests.Examples
             Assert.True(IsOdd(value));
         }
 
+        // Helper function.
         static bool IsOdd(int value)
         {
             return value%2 == 1;
-        }
-
-        public void Dispose()
-        {
-            // Put [TearDown] code here.
         }
     }
 }

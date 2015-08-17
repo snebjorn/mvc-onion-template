@@ -37,17 +37,11 @@ namespace Infrastructure.Data
             return new SampleContext();
         }
 
-        //Identity and Authorization
-        // public DbSet<UserLogin> UserLogins { get; set; }
-        // public DbSet<UserClaim> UserClaims { get; set; }
-        // public DbSet<UserRole> UserRoles { get; set; }
-
         public IDbSet<Student> Students { get; set; }
         public IDbSet<Teacher> Teachers { get; set; }
         public IDbSet<Course> Courses { get; set; }
         public IDbSet<ClassRoom> ClassRooms { get; set; } 
 
-        
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             // use conventions when possible

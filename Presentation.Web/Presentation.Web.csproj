@@ -282,7 +282,6 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Home\WindowsAuthenticationExample.cshtml" />
     <Content Include="Views\Home\AuthorizeAction.cshtml" />
     <Content Include="Views\ExampleAccount\Register.cshtml" />
     <Content Include="Views\ExampleAccount\Login.cshtml" />

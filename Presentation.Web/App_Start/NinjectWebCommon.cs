@@ -1,3 +1,4 @@
+using Antlr.Runtime;
 using Core.DomainModel;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Web.App_Start.NinjectWebCommon), "Start")]
@@ -72,7 +73,9 @@ namespace Web.App_Start
             // Repos
             kernel.Bind<IGenericRepository<Student>>().To<GenericRepository<Student>>();
 
-
+            // User Managers
+            //kernel.Bind<ApplicationUserManager>().ToSelf();
+            //kernel.Bind<ApplicationSignInManager>().ToSelf();
         }
     }
 }

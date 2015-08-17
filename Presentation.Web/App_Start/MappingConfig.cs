@@ -12,6 +12,7 @@ namespace Web
         {
             // ViewModel Mappings
             Mapper.CreateMap<StudentViewModel, Student>().ReverseMap();
+            Mapper.CreateMap<RegisterViewModelExample, ApplicationUser>().ReverseMap();
         }
     }
 }

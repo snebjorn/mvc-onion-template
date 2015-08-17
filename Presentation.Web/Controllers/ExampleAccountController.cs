@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
+using AutoMapper;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -16,7 +17,16 @@ namespace Web.Controllers
 {
     public class ExampleAccountController : Controller
     {
+        // Standard asp.net classes to manage users.
         private ApplicationUserManager _userManager;
+        private IAuthenticationManager AuthenticationManager
+        {
+            get
+            {
+                return HttpContext.GetOwinContext().Authentication;
+            }
+        }
+        private ApplicationSignInManager _signInManager;
         public ApplicationUserManager UserManager
         {
             get
@@ -28,8 +38,6 @@ namespace Web.Controllers
                 _userManager = value;
             }
         }
-
-        private ApplicationSignInManager _signInManager;
         public ApplicationSignInManager SignInManager
         {
             get
@@ -39,12 +47,9 @@ namespace Web.Controllers
             private set { _signInManager = value; }
         }
 
-        private IAuthenticationManager AuthenticationManager
+        public ExampleAccountController()
         {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
+
         }
 
         [AllowAnonymous]
@@ -60,7 +65,7 @@ namespace Web.Controllers
         {
             if (model.Password != model.ConfirmPassword)
                 return View(model);
-
+            
             var user = new ApplicationUser() { UserName = model.UserName, Email = model.Email };
 
             var result = await UserManager.CreateAsync(user, model.Password);
@@ -120,7 +125,7 @@ namespace Web.Controllers
         public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModelExample model)
         {
             var user = await UserManager.FindByEmailAsync(model.Email);
-            if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+            if (user == null || !(await _userManager.IsEmailConfirmedAsync(user.Id)))
             {
                 // Handle "user not found"
             }
