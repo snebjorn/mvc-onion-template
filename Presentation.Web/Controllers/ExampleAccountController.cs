@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Web.Models;
+using Infrastructure.Data;
 
 namespace Web.Controllers
 {
@@ -38,15 +39,6 @@ namespace Web.Controllers
             private set { _signInManager = value; }
         }
 
-        private ActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-            return RedirectToAction("Index", "Home");
-        }
-
         private IAuthenticationManager AuthenticationManager
         {
             get
@@ -61,14 +53,6 @@ namespace Web.Controllers
             return View();
         }
 
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("", error);
-            }
-        }
-
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -78,14 +62,15 @@ namespace Web.Controllers
                 return View(model);
 
             var user = new ApplicationUser() { UserName = model.UserName, Email = model.Email };
+
             var result = await UserManager.CreateAsync(user, model.Password);
+            
             if(result.Succeeded)
             {
                 await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                 return RedirectToAction("Index", "Home");
             }
-            AddErrors(result);
-            // If it reaches this, then something failed and we redisplay the form.
+
             return View(model);
         }
 
@@ -106,9 +91,9 @@ namespace Web.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction("Index", "Home");
                 case SignInStatus.Failure:
-                    return RedirectToAction("Index","Home");
+                    return RedirectToAction("Index", "Home");
             }
             
             return View();
@@ -127,7 +112,8 @@ namespace Web.Controllers
         {
             return View();
         }
-
+        
+        
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -143,6 +129,6 @@ namespace Web.Controllers
             // If it reaches this, then something failed and we redisplay the form.
             return View(model);
         }
-
+        
     }
 }

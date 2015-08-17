@@ -21,5 +21,6 @@ namespace Core.DomainModel
     /// </remarks>
     public class ApplicationUser : IdentityUser
     {
+
     }
 }

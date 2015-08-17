@@ -1,0 +1,56 @@
+﻿using System;
+using System.Collections.Generic;
+using Core.DomainModel;
+using Faker;
+
+namespace Infrastructure.Data.Seeding
+{
+    public class SeedingHelper
+    {
+        /*
+         * Examples of functions that uses Faker.Net to generate data and 
+         * seed a context with either departments or employees.
+         * The functions uses a interface as argument, so either give your context this interface
+         * or change the class, and adapt/change the functions to match the context you want to seed.
+         */
+
+        public static Student Student()
+        {
+            return new Student()
+            {
+                Name = Faker.Name.First(), 
+                CreatedOn = DateTime.Now, 
+                ModifiedOn = DateTime.Now
+            };
+        }
+
+        public static Course Course(List<Student> students)
+        {
+            return new Course()
+            {
+                Name = Faker.Company.Suffix(),
+                Students = students
+            };
+        }
+
+        public static Teacher Teacher(List<Course> courses)
+        {
+            return new Teacher()
+            {
+                Name = Faker.Name.First(),
+                Courses = courses
+            };
+
+        }
+
+        public static ClassRoom ClassRoom(Course course)
+        {
+            return new ClassRoom()
+            {
+                BuildingNumber = Faker.RandomNumber.Next(),
+                Floor = Faker.RandomNumber.Next(),
+                Course = course
+            };
+        }
+    }
+}

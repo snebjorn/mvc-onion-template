@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Infrastructure.Data;
 using Web.Models;
 
 namespace Web.Controllers
@@ -45,7 +46,6 @@ namespace Web.Controllers
 
         public ActionResult ChangePassword()
         {
-
             return View();
         }
 
@@ -54,6 +54,7 @@ namespace Web.Controllers
         public async Task<ActionResult> ChangePassword(ChangePasswordViewModelExample model)
         {
             var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+            
             if (result.Succeeded)
             {
                 var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
@@ -61,8 +62,9 @@ namespace Web.Controllers
                 {
                     await SignInAsync(user, isPersistent: false);
                 }
-                return RedirectToAction("Index", new { Message = ExampleManageMessageId.ChangePasswordSuccess });
+                return RedirectToAction("Index", "Home");
             }
+            
             return View(model);
         }
 
@@ -80,13 +82,6 @@ namespace Web.Controllers
                 return user.PasswordHash != null;
             }
             return false;
-        }
-
-        public enum ExampleManageMessageId
-        {
-            ChangePasswordSuccess,
-            SetPasswordSuccess,
-            Error
         }
     }
 }

@@ -24,6 +24,3 @@ When testing, stubs and mocks are a good way to substitute your dependencies, bu
 
 Fake db context;
 When testing controllers, it is preferable not to use the real database as the tests could potentially fill the database with invalid data, if not used correct. The small example shows how to substitute the database context and provide it with some fake data. All tests are then run on the data provided, and only persists in the current memory.
-
-Seeding with Faker.net:
-This is a framework that exposes some very simple functions that can be used to generate fake, but realistic data which can be used to seed a database.

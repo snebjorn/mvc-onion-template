@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Web.Helpers;
+using System.Web.Mvc;
 using Faker;
 using NSubstitute;
 using Web.Controllers;
@@ -83,6 +86,16 @@ namespace UnitTests.Examples
 
             _repo.Received().Insert(Arg.Any<Student>());
             _unitOfWork.Received().Save();
+        }
+
+        [Fact]
+        public void TestFindStudent()
+        {
+            var res = _controller.FindStudent(0);
+
+            Assert.NotNull(res);
+
+            _repo.Received().AsQueryable();
         }
     }
 }

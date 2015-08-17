@@ -2,9 +2,9 @@
 using Core.DomainModel;
 using Web.Models;
 
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Web.App_Start.MappingConfig), "Start")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Web.MappingConfig), "Start")]
 
-namespace Web.App_Start
+namespace Web
 {
     public class MappingConfig
     {

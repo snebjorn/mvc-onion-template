@@ -11,9 +11,11 @@
     @Html.AntiForgeryToken()
     
     @Html.LabelFor(m => m.UserName)
+    <br />
     @Html.TextBoxFor(m => m.UserName)
     <br/>
     @Html.LabelFor(m => m.Password)
+    <br />
     @Html.PasswordFor(m => m.Password)
     <br/>
     @Html.LabelFor(m => m.RememberMe)

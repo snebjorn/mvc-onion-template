@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,9 +11,11 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        [Column(TypeName = "datetime2")]
         public DateTime CreatedOn { get; set; }
+        [Column(TypeName = "datetime2")]
         public DateTime ModifiedOn { get; set; }
-
+        public float AverageGrade { get; set; }
         public virtual ICollection<Course> Courses { get; set; }
     }
 

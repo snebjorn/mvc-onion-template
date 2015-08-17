@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 using AutoMapper;
 using Core.DomainModel;
@@ -53,6 +54,21 @@ namespace Web.Controllers
         public List<Student> IndexStudentsByName()
         {
             return _studentRepository.AsQueryable().OrderBy(e => e.Name).ToList();
+        }
+
+        public ActionResult FindStudent(int? id)
+        {
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var student = _studentRepository.AsQueryable().Single(x => x.Id == id);
+
+            if (student == null)
+                return HttpNotFound();
+
+            var viewmodel = Mapper.Map<StudentViewModel>(student);
+
+            return Json(viewmodel, JsonRequestBehavior.AllowGet);
         }
     }
 }
