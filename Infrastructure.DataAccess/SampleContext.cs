@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Data.Entity;
 using Core.DomainModel;
@@ -28,8 +24,7 @@ namespace Infrastructure.Data
         public SampleContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
-            Database.SetInitializer<SampleContext>(null);
-            
+
         }
 
         public static SampleContext Create()
@@ -37,6 +32,7 @@ namespace Infrastructure.Data
             return new SampleContext();
         }
 
+        // Define you conceptual model here. Code first will include these types and all their references. 
         public IDbSet<Student> Students { get; set; }
         public IDbSet<Teacher> Teachers { get; set; }
         public IDbSet<Course> Courses { get; set; }
@@ -45,16 +41,7 @@ namespace Infrastructure.Data
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             // use conventions when possible
-
             base.OnModelCreating(modelBuilder);
-
-
-            //modelBuilder.Entity<IdentityUserRole>().HasKey(l => new { l.RoleId, l.UserId });
-            //modelBuilder.Entity<IdentityUserLogin>().HasKey<string>(l => l.UserId);
-
-            
-            //modelBuilder.Entity<IdentityRole>().HasKey<string>(l => l.Id);
-
         }
     }
 }
