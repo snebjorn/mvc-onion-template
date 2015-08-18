@@ -93,7 +93,7 @@ namespace Web.Controllers
                 case SignInStatus.Success:
                     return RedirectToAction("Index", "Home");
                 case SignInStatus.Failure:
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Login", "ExampleAccount");
             }
             
             return View();

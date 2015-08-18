@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.Migrations;
+﻿using System.Data.Entity.Migrations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Infrastructure.Data.Seeding;
 
 namespace Infrastructure.Data
 {
-    public class SampleInitializer : System.Data.Entity.DropCreateDatabaseAlways<SampleContext>
+    public class SampleInitializer : System.Data.Entity.CreateDatabaseIfNotExists<SampleContext>
     {
         protected override void Seed(SampleContext context)
         {
-            // 
+            // Specify what the database should be seeded with here.
             if (!context.Students.Any())
             {
                 for (var i = 0; i <= 10; i++)
@@ -45,9 +41,7 @@ namespace Infrastructure.Data
                 context.ClassRooms.AddOrUpdate(SeedingHelper.ClassRoom(context.Courses.FirstOrDefault()));
                 context.ClassRooms.AddOrUpdate(SeedingHelper.ClassRoom(context.Courses.ToList().Last()));
                 context.SaveChanges();
-            }  
-            
-            //base.Seed(context);
+            }
         }
     }
 }
