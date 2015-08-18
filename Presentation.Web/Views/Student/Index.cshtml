@@ -1,4 +1,4 @@
-﻿@model Web.Models.StudentViewModel
+﻿@model Web.Models.IndexStudentViewModel
 @{
     ViewBag.Title = "Index";
 }
@@ -6,28 +6,69 @@
 <h2>Index</h2>
 
 @ViewBag.Message
-
+<hr/>
 @using (Html.BeginForm("NewStudent", "Student", new { }, FormMethod.Post, new { }))
 {
     @Html.AntiForgeryToken()
+    <div class="input-group">
+        <span class="input-group-addon">
+            Student Name:
+        </span>
 
-    @Html.LabelFor(m => m.Name)
-    @Html.TextBoxFor(m => m.Name)
-    
-    <br/>
-    <input type="submit" class="btn btn-default" value="New Student" />
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+
+    </div>
+    <br />
+    <input type="submit" class="btn btn-primary" value="New Student" />
 }
 
-<br />
+<hr />
 <label for="Id">Student Id:</label>
-<input id="Id" name="Id" type="number"/>
-<br />
-<input id="findButton" type="button" class="btn btn-default" value="Find Student By Id" onClick="findStudent"/>
 
-<script type="text/javascript">
-    //document.getElementById("findButton").onclick(findStudent);
-    $("#findButton").on('click', findStudent);
-    function findStudent() {
-        window.open(location.origin + "/Student/FindStudent/" + document.getElementById("Id").value);
-    }
-</script>
+@Html.DropDownListFor(m => Model.SelectedId,
+                           ViewBag.StudentIds as IEnumerable<SelectListItem>,
+                           "-- Select --",
+                           new { id = "Id", @class = "form-control" })
+<br />
+<input id="findButton" type="button" class="btn btn-info" value="Find Student" />
+<hr />
+<div id="students">
+    Students Paging Example:
+    @Html.Partial("_Students")
+</div>
+
+<!-- Always write scripts in the scripts section. -->
+@section scripts
+{
+    <script type="text/javascript">
+        $(function () {
+
+            $("#findButton").on('click', findStudent);
+            bindPaging();
+
+            function findStudent() {
+                window.open(location.origin + "/Student/FindStudent/" + document.getElementById("Id").value);
+            }
+
+            function paging() {
+                var page = parseInt($(this).html());
+
+                $.ajax({
+                    url: '@Url.Action("_Students")',
+                    data: { "page": page },
+                    success: function (data) {
+                        $("#students").html(data);
+                    }
+                }).done(function () {
+                    bindPaging();
+                });
+            };
+
+            function bindPaging() {
+                $(".page-number").on("click", paging);
+            }
+
+
+        });
+    </script>
+}

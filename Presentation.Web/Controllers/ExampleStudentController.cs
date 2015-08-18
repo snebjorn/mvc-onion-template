@@ -16,6 +16,11 @@ namespace Web.Controllers
         private readonly IGenericRepository<Student> _studentRepository;
         private readonly IUnitOfWork _unitOfWork;
 
+
+        // Hardcoded pagesize
+        private const int PageSize = 3;
+
+
         /* The constructor takes GenericRepositories as argument, which is automatically created by ninject in NinjectWebCommon.
          * This enables us to quickly get references to our context, by simply typing, for 
          * example, "IGenericRepository<Course> courseRepository", which we can use right away.
@@ -30,7 +35,45 @@ namespace Web.Controllers
         public ActionResult Index()
         {
             ViewBag.Message = "Students are here.";
-            return View();
+
+            // We're putting the SelectListItems into a ViewBag, because we do not need to send it back.
+            // We only send the selectedId back.
+            ViewBag.StudentIds = _studentRepository.AsQueryable().Select(s =>
+                new SelectListItem()
+                {
+                    Value = s.Id.ToString(),
+                    Text = s.Id.ToString()
+                });
+
+            // Example of a dropdown menu.
+            var model = new IndexStudentViewModel()
+            {
+                PagedStudents = 
+                    new PagedData<Student>()
+                    {
+                        Data = _studentRepository.AsQueryable().OrderBy(p => p.Name).Take(PageSize).ToList(),
+                        NumberOfPages = PageingSizeHelper()
+                    }
+            };
+            return View(model);
+        }
+
+        private int PageingSizeHelper()
+        {
+            return Convert.ToInt32(Math.Ceiling((double) _studentRepository.Count()/PageSize));
+        }
+
+        public ActionResult _Students(int page)
+        {
+            var model = new IndexStudentViewModel()
+            {
+                PagedStudents = new PagedData<Student>()
+                {
+                    Data = _studentRepository.AsQueryable().OrderBy(p => p.Name).Skip(PageSize * (page -1)).Take(PageSize).ToList(),
+                    NumberOfPages = PageingSizeHelper()
+                }
+            };
+            return PartialView(model);
         }
 
         public ActionResult NewStudent()
@@ -65,12 +108,12 @@ namespace Web.Controllers
         }
 
         /* Function used to find a student by id.
-         * Will return a json object which can be used in javascript
+         * Will return a json object which can be used in javascript.
          */
         public ActionResult FindStudent(int? id)
         {
             if (id == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Json(new StudentViewModel(){ Name = "null" }, JsonRequestBehavior.AllowGet);
 
             var student = _studentRepository.AsQueryable().Single(x => x.Id == id);
 
@@ -80,6 +123,17 @@ namespace Web.Controllers
             var viewmodel = Mapper.Map<StudentViewModel>(student);
 
             return Json(viewmodel, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult StudentPaging()
+        {
+            // Construct a PagedData class.
+            var pagedStudents = new PagedData<Student>();
+
+            _studentRepository.AsQueryable();
+
+            return Json(pagedStudents, JsonRequestBehavior.AllowGet);
         }
     }
 }

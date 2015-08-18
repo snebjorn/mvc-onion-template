@@ -204,6 +204,7 @@
     <Content Include="Views\Student\Index.cshtml" />
     <Content Include="Views\Student\NewStudent.cshtml" />
     <Content Include="Views\Student\FindStudent.cshtml" />
+    <Content Include="Views\Student\_Students.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />

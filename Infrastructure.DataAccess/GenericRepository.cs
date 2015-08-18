@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Data
@@ -77,7 +76,7 @@ namespace Infrastructure.Data
         public T Create()
         {
             var entity = _dbSet.Create<T>();
-            
+
             if (typeof(T) is ICreatedOn)
                 (entity as ICreatedOn).CreatedOn = DateTime.Now;
             

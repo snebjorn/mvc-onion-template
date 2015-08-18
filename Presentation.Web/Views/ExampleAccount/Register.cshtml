@@ -8,22 +8,13 @@
 @using (@Html.BeginForm("Register", "ExampleAccount", FormMethod.Post, new {})) 
 {
     @Html.AntiForgeryToken()
-
     @Html.LabelFor(m => m.UserName)
-    <br />
-    @Html.TextBoxFor(m => m.UserName)
-    <br/>
+    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
     @Html.LabelFor(m => m.Email)
-    <br />
-    @Html.TextBoxFor(m => m.Email)
-    <br />
+    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
     @Html.LabelFor(m => m.Password)
-    <br />
-    @Html.PasswordFor(m => m.Password)
-    <br />
+    @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
     @Html.LabelFor(m => m.ConfirmPassword)
-    <br />
-    @Html.PasswordFor(m => m.ConfirmPassword)
-    <br />
-    <input type="submit" class="btn btn-default" value="Register" />
+    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+    <input type="submit" class="btn btn-primary" value="Register" />
 }

@@ -1,3 +1,11 @@
 ﻿Test
 
-Controllers are used to setup ?
+- Controllers
+
+- Ninject and Repositories
+
+- AutoMapper
+
+- Javascript
+
+- Domainmodels and ViewModels

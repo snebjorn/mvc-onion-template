@@ -9,11 +9,11 @@ This testing framework and works much like NUnit. They are both used much in the
 #### Notable differences: 
 - They use different attribute and assertion naming. A comparison can be found here (http://xunit.github.io/docs/comparisons.html), but do not expect it to be up to date.
 
-- xUnit uses the class constructor as as [Setup].
+- xUnit uses the class constructor as as `[Setup]`.
 
-- If needed, IDisposable can be implemented for [TearDown].
+- If needed, IDisposable can be implemented for `[TearDown]`.
 
-- Tests uses either the [Fact] or [Theory] attribute to define which functions are tests.
+- Tests uses either the `[Fact]` or `[Theory]` attribute to define which functions are tests.
     
 - NUnit instantiates one class and runs all its tests. xUnit will instantiate and dispose the class each time a test is run.
 
