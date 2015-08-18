@@ -47,11 +47,6 @@ namespace Web.Controllers
             private set { _signInManager = value; }
         }
 
-        public ExampleAccountController()
-        {
-
-        }
-
         [AllowAnonymous]
         public ActionResult Register()
         {

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Web.Helpers;
-using System.Web.Mvc;
 using Faker;
 using NSubstitute;
 using Web.Controllers;
@@ -40,17 +37,20 @@ namespace UnitTests.Examples
                 new Student() {Id = 1, Name = _studentName2 }
             }.AsQueryable();
 
-            // Setup for the substitute to behave like a DbSet that contains students.
+            // Setup for the substitute to behave like a DbSet.
             substituteDbSet.Provider.Returns(studentList.Provider);
             substituteDbSet.Expression.Returns(studentList.Expression);
             substituteDbSet.ElementType.Returns(studentList.ElementType);
             substituteDbSet.GetEnumerator().Returns(studentList.GetEnumerator());
 
-            // A substitute for the repository.
+            // Substitute the repository.
             _repo = Substitute.For<IGenericRepository<Student>>();
+
+            // Set the AsQueryable to return the DbSet
+            // You may need to set up other functions depending on the test case.
             _repo.AsQueryable().Returns(substituteDbSet.AsQueryable());
 
-            // A substitute for the UnitOfWork.
+            // A substitute for the UnitOfWork, used when saving context.
             _unitOfWork = Substitute.For<IUnitOfWork>();
             
             // Pass the context to the controller, and use this for testing.

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using Core.DomainModel;
 using Faker;
 
@@ -14,11 +15,13 @@ namespace Infrastructure.Data.Seeding
          * or change the class, and adapt/change the functions to match the context you want to seed.
          */
 
+
+
         public static Student Student()
         {
             return new Student()
             {
-                Name = Faker.Name.First(), 
+                Name = Name.First(), 
                 CreatedOn = DateTime.Now, 
                 ModifiedOn = DateTime.Now
             };
@@ -28,7 +31,7 @@ namespace Infrastructure.Data.Seeding
         {
             return new Course()
             {
-                Name = Faker.Company.Suffix(),
+                Name = Company.Suffix(),
                 Students = students
             };
         }
@@ -37,7 +40,7 @@ namespace Infrastructure.Data.Seeding
         {
             return new Teacher()
             {
-                Name = Faker.Name.First(),
+                Name = Name.First(),
                 Courses = courses
             };
 
@@ -47,8 +50,8 @@ namespace Infrastructure.Data.Seeding
         {
             return new ClassRoom()
             {
-                BuildingNumber = Faker.RandomNumber.Next(),
-                Floor = Faker.RandomNumber.Next(),
+                BuildingNumber = RandomNumber.Next(),
+                Floor = RandomNumber.Next(),
                 Course = course
             };
         }

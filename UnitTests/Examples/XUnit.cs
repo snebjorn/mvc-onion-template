@@ -43,8 +43,8 @@ namespace UnitTests.Examples
         }
 
         // Theories are tests which are only true for a particular set of data.
-        // Runs seperate tests for each of the InlineData lines, which makes it easy to run several times,
-        // with different arguments.
+        // Runs seperate tests for each of the InlineData lines, which makes it 
+        // easy to run several times, with different arguments.
         [Theory]
         [InlineData(3)] 
         [InlineData(5)]

@@ -40,7 +40,7 @@ namespace Infrastructure.Data
         public IDbSet<Student> Students { get; set; }
         public IDbSet<Teacher> Teachers { get; set; }
         public IDbSet<Course> Courses { get; set; }
-        public IDbSet<ClassRoom> ClassRooms { get; set; } 
+        public IDbSet<ClassRoom> ClassRooms { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

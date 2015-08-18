@@ -1,23 +1,25 @@
-using System.Collections.Generic;
 using Infrastructure.Data.Seeding;
-using Core.DomainModel;
+using System.Data.Entity.Migrations;
+using System.Linq;
 
 namespace Infrastructure.Data.Migrations
 {
-    using System;
-    using System.Data.Entity;
-    using System.Data.Entity.Migrations;
-    using System.Linq;
-
-    internal sealed class Configuration : DbMigrationsConfiguration<Infrastructure.Data.SampleContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<SampleContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(Infrastructure.Data.SampleContext context)
+        // This function is called on the database each time a Update-Database is called.
+        // Usually when seeding the function AddOrUpdate is used, but the function checks 
+        // whether the items exists when choosing to either adding or updating.
+        // When using Faker.net to generate data, every row of data that is inserted is new,
+        // so checking wheter it exists will always be false.
+        // 
+        protected override void Seed(SampleContext context)
         {
+            // 
             if (!context.Students.Any())
             {
                 for (var i = 0; i <= 10; i++)
@@ -35,6 +37,8 @@ namespace Infrastructure.Data.Migrations
                 context.SaveChanges();
             }
 
+            context.Students.Clear();
+
             if (!context.Teachers.Any()) {
                 for (var i = 0; i <= 2; i++)
                 {
@@ -42,6 +46,8 @@ namespace Infrastructure.Data.Migrations
                 }
                 context.SaveChanges();
             }
+
+            //context.Students.();
 
             if (!context.ClassRooms.Any())
             {

@@ -13,6 +13,10 @@ namespace Web.Controllers
     public class ExampleManageController : Controller
     {
         private ApplicationUserManager _userManager;
+        private IAuthenticationManager AuthenticationManager
+        {
+            get { return HttpContext.GetOwinContext().Authentication; }
+        }
         public ApplicationUserManager UserManager
         {
             get
@@ -24,12 +28,7 @@ namespace Web.Controllers
                 _userManager = value;
             }
         }
-
-        private IAuthenticationManager AuthenticationManager
-        {
-            get { return HttpContext.GetOwinContext().Authentication; }
-        }
-
+        
         public ActionResult Index()
         {
             var model = new ManageIndexViewModelExample
