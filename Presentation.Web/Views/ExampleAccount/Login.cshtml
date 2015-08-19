@@ -15,5 +15,10 @@
     @Html.LabelFor(m => m.RememberMe)
     @Html.CheckBoxFor(m => m.RememberMe)
     <br/>
-    <input type="submit" class="btn btn-primary" value="Log in" />
+    <button type="submit" class="btn btn-primary" value="Log in">
+        <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
+        Log in
+    </button>
+    <br/>
+    @Html.ActionLink("Forgot password", "ForgotPassword")
 }

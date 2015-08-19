@@ -76,10 +76,6 @@ namespace Infrastructure.Data
         public T Create()
         {
             var entity = _dbSet.Create<T>();
-
-            if (typeof(T) is ICreatedOn)
-                (entity as ICreatedOn).CreatedOn = DateTime.Now;
-            
             return entity;
         }
 

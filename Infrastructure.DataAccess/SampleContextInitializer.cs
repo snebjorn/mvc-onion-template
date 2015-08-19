@@ -4,44 +4,35 @@ using Infrastructure.Data.Seeding;
 
 namespace Infrastructure.Data
 {
-    public class SampleInitializer : System.Data.Entity.CreateDatabaseIfNotExists<SampleContext>
+    public class SampleInitializer : System.Data.Entity.DropCreateDatabaseIfModelChanges<SampleContext>
     {
+        /// <summary>
+        /// Specify what the database should be seeded with here.
+        /// </summary>
+        /// <param name="context">The database context.</param>
         protected override void Seed(SampleContext context)
         {
-            // Specify what the database should be seeded with here.
-            if (!context.Students.Any())
+            for (var i = 0; i <= 10; i++)
             {
-                for (var i = 0; i <= 10; i++)
-                {
-                    context.Students.AddOrUpdate(SeedingHelper.Student());
-                }
-                context.SaveChanges();
+                context.Students.AddOrUpdate(SeedingHelper.Student());
             }
+            context.SaveChanges();
 
-            if (!context.Courses.Any())
+            for (var i = 0; i <= 2; i++)
             {
-                for (var i = 0; i <= 2; i++)
-                {
-                    context.Courses.AddOrUpdate(SeedingHelper.Course(context.Students.ToList()));
-                }
-                context.SaveChanges();
+                context.Courses.AddOrUpdate(SeedingHelper.Course(context.Students.ToList()));
             }
-
-            if (!context.Teachers.Any())
+            context.SaveChanges();
+            
+            for (var i = 0; i <= 2; i++)
             {
-                for (var i = 0; i <= 2; i++)
-                {
-                    context.Teachers.AddOrUpdate(SeedingHelper.Teacher(context.Courses.ToList()));
-                }
-                context.SaveChanges();
+                context.Teachers.AddOrUpdate(SeedingHelper.Teacher(context.Courses.ToList()));
             }
-
-            if (!context.ClassRooms.Any())
-            {
-                context.ClassRooms.AddOrUpdate(SeedingHelper.ClassRoom(context.Courses.FirstOrDefault()));
-                context.ClassRooms.AddOrUpdate(SeedingHelper.ClassRoom(context.Courses.ToList().Last()));
-                context.SaveChanges();
-            }
+            context.SaveChanges();
+        
+            context.ClassRooms.AddOrUpdate(SeedingHelper.ClassRoom(context.Courses.FirstOrDefault()));
+            context.ClassRooms.AddOrUpdate(SeedingHelper.ClassRoom(context.Courses.ToList().Last()));
+            context.SaveChanges();
         }
     }
 }

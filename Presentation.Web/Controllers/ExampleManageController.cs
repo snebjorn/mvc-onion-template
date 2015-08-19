@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Core.DomainModel;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using Infrastructure.Data;
 using Web.Models;
 
 namespace Web.Controllers

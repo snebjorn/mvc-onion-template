@@ -35,6 +35,7 @@ namespace Web.Controllers
 
             // We're putting the SelectListItems into a ViewBag, because we do not need to send it back.
             // We only send the selectedId back.
+            // Example of a dropdown menu.
             ViewBag.StudentIds = _studentRepository.AsQueryable().Select(s =>
                 new SelectListItem()
                 {
@@ -42,20 +43,21 @@ namespace Web.Controllers
                     Text = s.Id.ToString()
                 });
 
-            // Example of a dropdown menu.
+            // Example of paging students in a table.
             var model = new IndexStudentViewModel()
             {
-                PagedStudents = 
-                    new PagedData<Student>()
+                PagedStudents =
+                    new PagedData<StudentViewModel>()
                     {
-                        Data = _studentRepository.AsQueryable().OrderBy(p => p.Name).Take(PageSize).ToList(),
-                        NumberOfPages = PageingsSizeHelper()
+                        // Always configure automapper into mapping viewmodels against domainmodels.
+                        Data = Mapper.Map<List<Student>, List<StudentViewModel>>(_studentRepository.AsQueryable().OrderBy(p => p.Name).Take(PageSize).ToList()).ToList(),
+                        NumberOfPages = PagingsSizeHelper()
                     }
             };
             return View(model);
         }
 
-        private int PageingsSizeHelper()
+        private int PagingsSizeHelper()
         {
             return Convert.ToInt32(Math.Ceiling((double) _studentRepository.Count()/PageSize));
         }
@@ -64,10 +66,11 @@ namespace Web.Controllers
         {
             var model = new IndexStudentViewModel()
             {
-                PagedStudents = new PagedData<Student>()
+                PagedStudents = new PagedData<StudentViewModel>()
                 {
-                    Data = _studentRepository.AsQueryable().OrderBy(p => p.Name).Skip(PageSize * (page -1)).Take(PageSize).ToList(),
-                    NumberOfPages = PageingsSizeHelper()
+                    // Always configure automapper into mapping viewmodels against domainmodels.
+                    Data = Mapper.Map<List<Student>, List<StudentViewModel>>(_studentRepository.AsQueryable().OrderBy(p => p.Name).Skip(PageSize * (page - 1)).Take(PageSize).ToList()),
+                    NumberOfPages = PagingsSizeHelper()
                 }
             };
             return PartialView(model);
@@ -93,7 +96,10 @@ namespace Web.Controllers
             return View(model);
         }
 
-        // Functions used in UnitTest Examples - How to test a controller (FakeDbContext).
+        /// <summary>
+        /// Functions used in UnitTest Examples - How to test a controller (FakeDbContext).
+        /// </summary>
+        /// <returns></returns>
         public List<Student> IndexStudentsById()
         {
             return _studentRepository.AsQueryable().OrderBy(d => d.Id).ToList();
@@ -104,9 +110,12 @@ namespace Web.Controllers
             return _studentRepository.AsQueryable().OrderBy(e => e.Name).ToList();
         }
 
-        /* Function used to find a student by id.
-         * Will return a json object which can be used in javascript.
-         */
+        /// <summary>
+        /// Function used to find a student by id.
+        /// Will return a json object which can be used in javascript.
+        /// </summary>
+        /// <param name="id">Id specifying the student</param>
+        /// <returns>Json string resembling a studentviewmodel</returns>
         public ActionResult FindStudent(int? id)
         {
             if (id == null)
@@ -120,15 +129,6 @@ namespace Web.Controllers
             var viewmodel = Mapper.Map<StudentViewModel>(student);
 
             return Json(viewmodel, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPost]
-        public ActionResult StudentPaging()
-        {
-            // Construct a PagedData class.
-            var pagedStudents = new PagedData<Student>();
-            _studentRepository.AsQueryable();
-            return Json(pagedStudents, JsonRequestBehavior.AllowGet);
         }
     }
 }

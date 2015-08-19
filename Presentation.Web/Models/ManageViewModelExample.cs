@@ -1,4 +1,6 @@
-﻿namespace Web.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Web.Models
 {
     public class ManageIndexViewModelExample
     {

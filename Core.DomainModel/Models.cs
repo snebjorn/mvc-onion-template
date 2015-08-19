@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.DomainModel
 {
@@ -8,9 +7,7 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        [Column(TypeName = "datetime2")]
         public DateTime CreatedOn { get; set; }
-        [Column(TypeName = "datetime2")]
         public DateTime ModifiedOn { get; set; }
         public float AverageGrade { get; set; }
         public virtual ICollection<Course> Courses { get; set; }

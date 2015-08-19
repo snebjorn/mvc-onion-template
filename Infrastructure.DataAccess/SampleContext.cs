@@ -7,20 +7,11 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Infrastructure.Data
 {
-    // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
-    public class ApplicationUser : IdentityUser
-    {
-        public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<Data.ApplicationUser> manager)
-        {
-            // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
-            var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
-            // Add custom user claims here
-            return userIdentity;
-        }
-    }
-
     public class SampleContext : IdentityDbContext<ApplicationUser>
     {
+
+        // throwIfV1Schema is used when updgrading Identity in a database from 1 to 2.
+        // It's a one time thing and can be safely removed.
         public SampleContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
@@ -40,39 +31,20 @@ namespace Infrastructure.Data
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            // use conventions when possible
+            // Use conventions when possible.
+            modelBuilder.Entity<Student>().Property(s => s.CreatedOn).HasColumnType("datetime2");
+            modelBuilder.Entity<Student>().Property(s => s.ModifiedOn).HasColumnType("datetime2");
+
+            // Use a maxlength on strings, because if somebody decides to submit a very large string, then the local database will 
+            // allocate a very large area, which cannot be used when generating indexes.
+            modelBuilder.Entity<Student>().Property(s => s.Name).HasMaxLength(50);
+            modelBuilder.Entity<Course>().Property(s => s.Name).HasMaxLength(50);
+            modelBuilder.Entity<Teacher>().Property(s => s.Name).HasMaxLength(50);
+
+
+            //modelBuilder.Entity<>()
+
             base.OnModelCreating(modelBuilder);
         }
     }
 }
-
-// OLD CODE
-
-/*
-// You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
-public class ApplicationUser : IdentityUser
-{
-    public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
-    {
-        // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
-        var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
-        // Add custom user claims here
-        return userIdentity;
-    }
-}
-
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
-{
-    public ApplicationDbContext()
-        : base("DefaultConnection", throwIfV1Schema: false)
-    {
-    }
-
-    public static ApplicationDbContext Create()
-    {
-        return new ApplicationDbContext();
-    }
-}
-*/
-
-

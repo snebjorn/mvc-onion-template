@@ -16,5 +16,9 @@
     @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
     @Html.LabelFor(m => m.ConfirmPassword)
     @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
-    <input type="submit" class="btn btn-primary" value="Register" />
+    <br/>
+    <button type="submit" class="btn btn-primary" value="Register">
+        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+        Register
+    </button>
 }

@@ -1,7 +1,7 @@
 ﻿## UnitTests:
 
 This folder contains examples of how to use xUnit, nSubstitute and faking a db context with fake data.
-Each file will have some short examples of how they are used, and how they can be used together. 
+There will be a file with some short examples of how they are used, and how they can be used together. 
 
 ### xUnit:
 This testing framework and works much like NUnit. They are both used much in the same way, although you implement your tests different.

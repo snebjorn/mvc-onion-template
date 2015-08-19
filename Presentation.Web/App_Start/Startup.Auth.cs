@@ -1,4 +1,5 @@
 ﻿using System;
+using Core.DomainModel;
 using Infrastructure.Data;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;

@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Core.DomainModel;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Web.Models;
-using Infrastructure.Data;
 
 namespace Web.Controllers
 {
@@ -12,14 +12,14 @@ namespace Web.Controllers
     {
         // Standard asp.net classes to manage users.
         private ApplicationUserManager _userManager;
+        private ApplicationSignInManager _signInManager;
         private IAuthenticationManager AuthenticationManager
         {
             get
             {
                 return HttpContext.GetOwinContext().Authentication;
             }
-        }
-        private ApplicationSignInManager _signInManager;
+        }   
         public ApplicationUserManager UserManager
         {
             get
@@ -39,7 +39,7 @@ namespace Web.Controllers
             }
             private set { _signInManager = value; }
         }
-
+        
         [AllowAnonymous]
         public ActionResult Register()
         {
@@ -105,7 +105,6 @@ namespace Web.Controllers
         {
             return View();
         }
-        
         
         [HttpPost]
         [AllowAnonymous]
