@@ -19,7 +19,10 @@
 
     </div>
     <br />
-    <input type="submit" class="btn btn-primary" value="New Student" />
+    <button type="submit" class="btn btn-primary" value ="New Student">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        New Student
+    </button>
 }
 
 <hr />
@@ -30,8 +33,13 @@
                            "-- Select --",
                            new { id = "Id", @class = "form-control" })
 <br />
-<input id="findButton" type="button" class="btn btn-info" value="Find Student" />
+<button id="findButton" type="button" class="btn btn-info" value="Find Student">
+    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+    Find Student
+</button>
+
 <hr />
+
 <div id="students">
     Students Paging Example:
     @Html.Partial("_Students")
@@ -43,10 +51,14 @@
     <script type="text/javascript">
         $(function () {
 
+            // Binding the html buttons to javascript functions.
             $("#findButton").on('click', findStudent);
+
+            // This binding is located in a function, so we are able to reuse it easy. 
             bindPaging();
 
             function findStudent() {
+                // Get base url and open the path to the student.  
                 window.open(location.origin + "/Student/FindStudent/" + document.getElementById("Id").value);
             }
 
@@ -60,6 +72,9 @@
                         $("#students").html(data);
                     }
                 }).done(function () {
+                    // We bind it again in this callback, 
+                    // because reloading the content of the partial
+                    // will unbind the previous bindings.
                     bindPaging();
                 });
             };
@@ -67,8 +82,6 @@
             function bindPaging() {
                 $(".page-number").on("click", paging);
             }
-
-
         });
     </script>
 }

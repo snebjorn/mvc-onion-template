@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Web.Mvc;
 using AutoMapper;
 using Core.DomainModel;
@@ -16,10 +15,8 @@ namespace Web.Controllers
         private readonly IGenericRepository<Student> _studentRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-
-        // Hardcoded pagesize
+        // Hardcoded pagingsize
         private const int PageSize = 3;
-
 
         /* The constructor takes GenericRepositories as argument, which is automatically created by ninject in NinjectWebCommon.
          * This enables us to quickly get references to our context, by simply typing, for 
@@ -52,13 +49,13 @@ namespace Web.Controllers
                     new PagedData<Student>()
                     {
                         Data = _studentRepository.AsQueryable().OrderBy(p => p.Name).Take(PageSize).ToList(),
-                        NumberOfPages = PageingSizeHelper()
+                        NumberOfPages = PageingsSizeHelper()
                     }
             };
             return View(model);
         }
 
-        private int PageingSizeHelper()
+        private int PageingsSizeHelper()
         {
             return Convert.ToInt32(Math.Ceiling((double) _studentRepository.Count()/PageSize));
         }
@@ -70,7 +67,7 @@ namespace Web.Controllers
                 PagedStudents = new PagedData<Student>()
                 {
                     Data = _studentRepository.AsQueryable().OrderBy(p => p.Name).Skip(PageSize * (page -1)).Take(PageSize).ToList(),
-                    NumberOfPages = PageingSizeHelper()
+                    NumberOfPages = PageingsSizeHelper()
                 }
             };
             return PartialView(model);
@@ -130,9 +127,7 @@ namespace Web.Controllers
         {
             // Construct a PagedData class.
             var pagedStudents = new PagedData<Student>();
-
             _studentRepository.AsQueryable();
-
             return Json(pagedStudents, JsonRequestBehavior.AllowGet);
         }
     }

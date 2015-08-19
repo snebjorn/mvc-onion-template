@@ -1,4 +1,3 @@
-using Antlr.Runtime;
 using Core.DomainModel;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Web.App_Start.NinjectWebCommon), "Start")]

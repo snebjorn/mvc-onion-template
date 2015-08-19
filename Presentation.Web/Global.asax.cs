@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
+﻿using System.Data.Entity;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -32,6 +28,8 @@ namespace Web
 
             // Alternatively, you can create your own initializer and pass it as the argument.
             // The class will need to implement one of the above in order to inherit some behaviour.
+            // This SampleInitializer has a custom seeding function, that will populate the database instance
+            // with some fake data that can be used right away.
             Database.SetInitializer(new SampleInitializer());
 
             AreaRegistration.RegisterAllAreas();
