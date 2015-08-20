@@ -5,17 +5,14 @@ using Faker;
 
 namespace Infrastructure.Data.Seeding
 {
+    /// <summary>
+    /// Examples of functions that uses Faker.Net to generate data and 
+    /// seed a context with either departments or employees.
+    /// The functions uses a interface as argument, so either give your context this interface
+    /// or change the class, and adapt/change the functions to match the context you want to seed.
+    /// </summary>
     public class SeedingHelper
     {
-        /*
-         * Examples of functions that uses Faker.Net to generate data and 
-         * seed a context with either departments or employees.
-         * The functions uses a interface as argument, so either give your context this interface
-         * or change the class, and adapt/change the functions to match the context you want to seed.
-         */
-
-
-
         public static Student Student()
         {
             return new Student()

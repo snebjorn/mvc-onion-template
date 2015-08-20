@@ -69,11 +69,6 @@ namespace Web.App_Start
             kernel.Bind<SampleContext>().ToSelf().InRequestScope();
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
             kernel.Bind(typeof(IGenericRepository<>)).To(typeof(GenericRepository<>));
-
-            // User Managers
-            kernel.Bind<ApplicationUserManager>().ToSelf();
-            kernel.Bind<ApplicationSignInManager>().ToSelf();
-            //kernel.Bind<IAuthenticationManager>().ToSelf(System.Web.Mvc.Controller.HttpContext.GetOwinContext().Authentication);
         }
     }
 }

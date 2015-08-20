@@ -91,9 +91,6 @@ namespace Infrastructure.Data
 
         public T Insert(T entity)
         {
-            if (typeof(T) is IModifiedOn)
-                (entity as IModifiedOn).ModifiedOn = DateTime.Now;
-
             return _dbSet.Add(entity);
         }
 

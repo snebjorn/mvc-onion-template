@@ -18,11 +18,14 @@ namespace Web.Controllers
         // Hardcoded pagingsize
         private const int PageSize = 3;
 
-        /* The constructor takes GenericRepositories as argument, which is automatically created by ninject in NinjectWebCommon.
-         * This enables us to quickly get references to our context, by simply typing, for 
-         * example, "IGenericRepository<Course> courseRepository", which we can use right away.
-         * Whenever a changes is made, use _unitOfWork.Save() to save any changes.
-         */
+        /// <summary>
+        /// The constructor takes GenericRepositories as argument, which is automatically created by ninject in NinjectWebCommon.
+        /// This enables us to quickly get references to our context, by simply typing, for 
+        /// example, "IGenericRepository<Course> courseRepository", which we can use right away.
+        /// Whenever a changes is made, use _unitOfWork.Save() to save any changes.
+        /// </summary>
+        /// <param name="unitOfWork"></param>
+        /// <param name="studentRepository"></param>
         public StudentController(IUnitOfWork unitOfWork, IGenericRepository<Student> studentRepository)
         {
             _studentRepository = studentRepository;
@@ -100,14 +103,14 @@ namespace Web.Controllers
         /// Functions used in UnitTest Examples - How to test a controller (FakeDbContext).
         /// </summary>
         /// <returns></returns>
-        public List<Student> IndexStudentsById()
-        {
-            return _studentRepository.AsQueryable().OrderBy(d => d.Id).ToList();
+        public List<StudentViewModel> IndexStudentsById()
+        {   
+            return Mapper.Map<List<Student>, List<StudentViewModel>>(_studentRepository.AsQueryable().OrderBy(p => p.Id).ToList());
         }
 
-        public List<Student> IndexStudentsByName()
+        public List<StudentViewModel> IndexStudentsByName()
         {
-            return _studentRepository.AsQueryable().OrderBy(e => e.Name).ToList();
+            return Mapper.Map<List<Student>, List<StudentViewModel>>(_studentRepository.AsQueryable().OrderBy(p => p.Name).ToList());
         }
 
         /// <summary>

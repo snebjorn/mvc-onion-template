@@ -24,15 +24,16 @@ namespace UnitTests.Examples
         // Usage of Faker.Net to generate random variables.
         private readonly string _studentName1 = Faker.Name.First();
         private readonly string _studentName2 = Faker.Name.First();
-        
+
         /// <summary>
         /// Constructor for the test cases.
         /// For each test case, the class is instantiated and disposed.
+        /// The basic naming of a test comprises of three main parts:
+        /// [UnitOfWork_StateUnderTest_ExpectedBehavior]
+        /// Followed by //Arange, //Act and //Assert
         /// </summary>
         public FakeDbContext()
         {
-            // Arange
-
             // Example: https://msdn.microsoft.com/en-us/data/dn314429
 
             // Create fake context and populate it with some fake data. (Add more data as needed.)
@@ -66,17 +67,12 @@ namespace UnitTests.Examples
             Mapper.CreateMap<StudentViewModel, Student>().ReverseMap();
         }
         
-        // The basic naming of a test comprises of three main parts:
-        // [UnitOfWork_StateUnderTest_ExpectedBehavior]
-        // Followed by //Arange, //Act and //Assert
-
         [Fact]
         public void IndexStudentsByName_CallingTheMethod_ReturnsStudents()
         {
             // Arange
             // Act
             var res = _controller.IndexStudentsByName();
-            
             // Assert
             Assert.True(res.FindIndex(d => d.Name == _studentName1) > -1);
             Assert.True(res.FindIndex(d => d.Name == _studentName2) > -1);
@@ -88,7 +84,6 @@ namespace UnitTests.Examples
             // Arange
             // Act
             var res = _controller.IndexStudentsById();
-
             // Assert
             Assert.True(res[0].Id == 0);
             Assert.True(res[1].Id == 1);

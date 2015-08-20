@@ -41,9 +41,6 @@ namespace Infrastructure.Data
             modelBuilder.Entity<Course>().Property(s => s.Name).HasMaxLength(50);
             modelBuilder.Entity<Teacher>().Property(s => s.Name).HasMaxLength(50);
 
-
-            //modelBuilder.Entity<>()
-
             base.OnModelCreating(modelBuilder);
         }
     }
