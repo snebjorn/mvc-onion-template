@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Web.Mvc;
 using Faker;
 using NSubstitute;
 using Web.Controllers;
@@ -101,15 +102,78 @@ namespace UnitTests.Examples
             _unitOfWork.Received().Save();
         }
 
-        [Fact]
-        public void FindStudent_CanFindStudentWithId0_ReturnsANotNullObject()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        public void FindStudent_CanFindStudentWithId_ReturnsANotNullObject(int value)
         {
             // Arange
-            var res = _controller.FindStudent(0);
             // Act
-            Assert.NotNull(res);
+            var res = _controller.FindStudent(value);
             // Assert
+            Assert.NotNull(res);
             _repo.Received().AsQueryable();
+        }
+
+        [Fact]
+        public void FindStudent_CannotFindStudentWithNull_ReturnsJsonWithNullString()
+        {
+            // Arange
+            // Act
+            var res = _controller.FindStudent(null) as JsonResult;
+            var data = res.Data as StudentViewModel;
+            // Assert
+            Assert.Equal("null", data.Name);
+        }
+
+        [Fact]
+        public void FindStudent_CannotFindStudentThatDoesNotExist_ReturnHttpNotFound()
+        {
+            // Arange
+            // Act
+            var res = _controller.FindStudent(5);
+            // Assert
+            Assert.IsType<HttpNotFoundResult>(res);
+        }
+
+        [Fact]
+        public void Index_ReturnsSelectListAndViewModel_TypesAndModelMatchesAndSelectedIdIsZeroAndNameIsNull()
+        {
+            // Arange
+            // Act
+            var res = _controller.Index() as ViewResult;
+            var viewModel = res.Model as IndexStudentViewModel;
+            var selectList = res.ViewBag.StudentIds;
+            // Assert
+            Assert.NotNull(viewModel.PagedStudents);
+            Assert.Null(viewModel.Name);
+            Assert.IsType<int>(viewModel.SelectedId);
+            Assert.Equal(viewModel.SelectedId, 0);
+            Assert.IsType<EnumerableQuery<SelectListItem>>(selectList);
+        }
+
+        [Fact]
+        public void _Students_TablePaging_PagedDataContainsAListOfStudentsAndNumberOfPagesIsZero()
+        {
+            // Arange
+
+            // Act
+            var res = _controller._Students(0) as PartialViewResult;
+            var viewModel = res.Model as IndexStudentViewModel;
+            var pagedData = viewModel.PagedStudents;
+            // Assert
+            Assert.IsType<List<StudentViewModel>>(pagedData.Data);
+            Assert.True(pagedData.NumberOfPages == 0);
+        }
+
+        [Fact]
+        public void NewStudent_IsWorking_ReturnsAView()
+        {
+            // Arange
+            // Act
+            var res = _controller.NewStudent();
+            // Assert
+            Assert.IsType<ViewResult>(res);
         }
     }
 }

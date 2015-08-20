@@ -124,7 +124,7 @@ namespace Web.Controllers
             if (id == null)
                 return Json(new StudentViewModel(){ Name = "null" }, JsonRequestBehavior.AllowGet);
 
-            var student = _studentRepository.AsQueryable().Single(x => x.Id == id);
+            var student = _studentRepository.AsQueryable().SingleOrDefault(x => x.Id == id);
 
             if (student == null)
                 return HttpNotFound();
