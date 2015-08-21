@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNet.Identity;
-
-namespace Web.Mail
+﻿namespace Web.Mail
 {
     public interface IMailHandler
     {
-        string GetMailMessage(IdentityMessage content);
+        string GetMailMessage<T>(T content, string template);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Core.DomainModel;
-using Microsoft.AspNet.Identity;
 using Web.Models;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Web.App_Start.MappingConfig), "Start")]
@@ -21,9 +20,6 @@ namespace Web.App_Start
             // ViewModel Mappings
             Mapper.CreateMap<StudentViewModel, Student>().ReverseMap();
             Mapper.CreateMap<RegisterViewModelExample, ApplicationUser>().ReverseMap();
-            Mapper.CreateMap<MailViewModel, IdentityMessage>()
-                .ForMember(dest => dest.Body, opts => opts.MapFrom(src => src.Content))
-                .ForMember(dest => dest.Destination, opts => opts.MapFrom(src => src.Email));
         }
     }
 }

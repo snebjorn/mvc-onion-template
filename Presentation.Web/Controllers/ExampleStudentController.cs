@@ -7,6 +7,7 @@ using AutoMapper;
 using Core.DomainModel;
 using Core.DomainServices;
 using Microsoft.AspNet.Identity;
+using Web.Mail;
 using Web.Models;
 
 namespace Web.Controllers
@@ -17,6 +18,7 @@ namespace Web.Controllers
 
         private readonly IGenericRepository<Student> _studentRepository;
         private readonly IIdentityMessageService _emailService;
+        private readonly IMailHandler _mailHandler;
         private readonly IUnitOfWork _unitOfWork;
 
         // Hardcoded pagingsize
@@ -30,10 +32,11 @@ namespace Web.Controllers
         /// </summary>
         /// <param name="unitOfWork"></param>
         /// <param name="studentRepository"></param>
-        public StudentController(IUnitOfWork unitOfWork, IGenericRepository<Student> studentRepository, IIdentityMessageService emailService)
+        public StudentController(IUnitOfWork unitOfWork, IGenericRepository<Student> studentRepository, IIdentityMessageService emailService, IMailHandler mailHandler)
         {
             _studentRepository = studentRepository;
             _emailService = emailService;
+            _mailHandler = mailHandler;
             _unitOfWork = unitOfWork;
         }
 
@@ -146,7 +149,13 @@ namespace Web.Controllers
 
         public async Task<ActionResult> SendMail(MailViewModel model)
         {
-            var message = Mapper.Map<IdentityMessage>(model);
+            var message = new IdentityMessage
+            {
+                Body = _mailHandler.GetMailMessage(model, "EmailTemplate.cshtml"),
+                Destination = model.Email,
+                Subject = model.Subject
+            };
+
             await _emailService.SendAsync(message);
             return Json("Ok", JsonRequestBehavior.AllowGet);
         }

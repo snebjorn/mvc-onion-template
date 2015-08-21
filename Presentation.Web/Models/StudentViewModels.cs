@@ -20,6 +20,9 @@ namespace Web.Models
     {
         public string Subject { get; set; }
         public string Email { get; set; }
-        public string Content { get; set; }
+        public string Foo { get; set; }
+        public string Bar { get; set; }
+        public string Baz { get; set; }
+        public string Qux { get; set; }
     }
 }

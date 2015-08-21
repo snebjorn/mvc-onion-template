@@ -11,8 +11,14 @@
     <label>To:</label>
     @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
     <br/>
-    @Html.TextAreaFor(m => m.Content)
+    @Html.TextAreaFor(m => m.Foo)
     <br/>
+    @Html.TextAreaFor(m => m.Bar)
+    <br />
+    @Html.TextAreaFor(m => m.Baz)
+    <br />
+    @Html.TextAreaFor(m => m.Qux)
+    <br />
     <button type="submit" class="btn btn-primary" value="Send Mail">
         <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
         Send Mail

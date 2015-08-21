@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Net.Mail;
 using System.Net.Mime;
-using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Core.ApplicationServices;
-using Core.ApplicationServices.Mail;
 using Core.DomainModel;
 using Infrastructure.Data;
 using Microsoft.AspNet.Identity;
@@ -13,8 +10,6 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
-using Ninject;
-using Web.Mail;
 
 namespace Web
 {
@@ -100,16 +95,11 @@ namespace Web
     public class EmailService : IIdentityMessageService
     {
         private readonly SmtpClient _smtpClient;
-        private readonly IMailHandler _mailHandler;
 
-        public EmailService(
-            SmtpClient smtpClient, 
-            IMailHandler mailHandler)
+        public EmailService(SmtpClient smtpClient)
         {
             _smtpClient = smtpClient;
-            _mailHandler = mailHandler;
         }
-        
 
         public Task SendAsync(IdentityMessage message)
         {
@@ -117,7 +107,7 @@ namespace Web
             {
                 Subject = message.Subject,
                 IsBodyHtml = true,
-                Body = _mailHandler.GetMailMessage(message)
+                Body = message.Body
             };
             
             mailMessage.To.Add(message.Destination);
@@ -129,11 +119,13 @@ namespace Web
             
             try
             {
-                _smtpClient.Send(mailMessage);
+                _smtpClient.SendAsync(mailMessage, null);
             }
             catch (Exception e)
             {
-                // handle error
+                // Handle errors here.
+                // For example someone typed in a wrong email address.
+                // Right now this check is redundant, as it throws on the next line.
                 throw;
             }
 

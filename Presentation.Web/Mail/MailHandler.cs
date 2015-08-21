@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using Core.ApplicationServices.Mail;
-using Microsoft.AspNet.Identity;
 using RazorEngine.Templating;
 
 namespace Web.Mail
@@ -16,19 +14,13 @@ namespace Web.Mail
             _engineService = engineService;
         }
 
-        public string GetMailMessage(IdentityMessage content)
+        public string GetMailMessage<T>(T model, string emailTemplateName)
         {
             var templateFolderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MailTemplates");
-            var mailTemplate = Path.Combine(templateFolderPath, "EmailTemplate.cshtml");
+            var mailTemplate = Path.Combine(templateFolderPath, emailTemplateName);
             var template = File.ReadAllText(mailTemplate);
-            
-            var model = new EmailModel
-            {
-                Subject = content.Subject,
-                Content = content.Body
-            };
 
-            var emailHtmlBody = _engineService.RunCompile(template, "Mail", typeof(EmailModel), model);
+            var emailHtmlBody = _engineService.RunCompile(template, "Mail", typeof(T), model);
 
             return emailHtmlBody;
         }
