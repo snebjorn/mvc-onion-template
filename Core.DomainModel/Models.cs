@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.DomainModel
 {
@@ -12,7 +9,7 @@ namespace Core.DomainModel
         public string Name { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
-
+        public float AverageGrade { get; set; }
         public virtual ICollection<Course> Courses { get; set; }
     }
 
@@ -20,9 +17,7 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        //public virtual Teacher Teacher { get; set; }
         public virtual ICollection<Student> Students { get; set; }
-        //public virtual ClassRoom ClassRoom { get; set; }
     }
 
     public class Teacher : IEntity

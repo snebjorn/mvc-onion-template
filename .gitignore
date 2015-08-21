@@ -72,6 +72,9 @@ _TeamCity*
 # DotCover is a Code Coverage Tool
 *.dotCover
 
+# ReportGenerater Folder
+/UnitTests/coverage
+
 # NCrunch
 *.ncrunch*
 .*crunch*.local.xml

@@ -1,37 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
+using System.Net.Mail;
+using System.Net.Mime;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
+using Core.DomainModel;
+using Infrastructure.Data;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
-using Web.Models;
 
 namespace Web
 {
-    public class EmailService : IIdentityMessageService
-    {
-        public Task SendAsync(IdentityMessage message)
-        {
-            // Plug in your email service here to send an email.
-            return Task.FromResult(0);
-        }
-    }
-
-    public class SmsService : IIdentityMessageService
-    {
-        public Task SendAsync(IdentityMessage message)
-        {
-            // Plug in your SMS service here to send a text message.
-            return Task.FromResult(0);
-        }
-    }
-
     // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
@@ -42,22 +23,25 @@ namespace Web
 
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
         {
-            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
+            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<SampleContext>()));
+
             // Configure validation logic for usernames
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
                 RequireUniqueEmail = true
             };
-
+            
             // Configure validation logic for passwords
             manager.PasswordValidator = new PasswordValidator
             {
+                /*
                 RequiredLength = 6,
                 RequireNonLetterOrDigit = true,
                 RequireDigit = true,
                 RequireLowercase = true,
-                RequireUppercase = true,
+                RequireUppercase = true
+                 */
             };
 
             // Configure user lockout defaults
@@ -76,8 +60,9 @@ namespace Web
                 Subject = "Security Code",
                 BodyFormat = "Your security code is {0}"
             });
-            manager.EmailService = new EmailService();
+
             manager.SmsService = new SmsService();
+            
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
@@ -104,6 +89,56 @@ namespace Web
         public static ApplicationSignInManager Create(IdentityFactoryOptions<ApplicationSignInManager> options, IOwinContext context)
         {
             return new ApplicationSignInManager(context.GetUserManager<ApplicationUserManager>(), context.Authentication);
+        }
+    }
+
+    public class EmailService : IIdentityMessageService
+    {
+        private readonly SmtpClient _smtpClient;
+
+        public EmailService(SmtpClient smtpClient)
+        {
+            _smtpClient = smtpClient;
+        }
+
+        public Task SendAsync(IdentityMessage message)
+        {
+            var mailMessage = new MailMessage()
+            {
+                Subject = message.Subject,
+                IsBodyHtml = true,
+                Body = message.Body
+            };
+            
+            mailMessage.To.Add(message.Destination);
+
+            // alternate view, for clients that can't view HTML
+            var mimeType = new ContentType("text/html");
+            var alternate = AlternateView.CreateAlternateViewFromString(message.Body, mimeType);
+            mailMessage.AlternateViews.Add(alternate);
+            
+            try
+            {
+                _smtpClient.SendAsync(mailMessage, null);
+            }
+            catch (Exception e)
+            {
+                // Handle errors here.
+                // For example someone typed in a wrong email address.
+                // Right now this check is redundant, as it throws on the next line.
+                throw;
+            }
+
+            return Task.FromResult(0);
+        }
+    }
+
+    public class SmsService : IIdentityMessageService
+    {
+        public Task SendAsync(IdentityMessage message)
+        {
+            // Plug in your SMS service here to send a text message.
+            return Task.FromResult(0);
         }
     }
 }

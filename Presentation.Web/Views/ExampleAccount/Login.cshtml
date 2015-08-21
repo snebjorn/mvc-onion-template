@@ -1,0 +1,24 @@
+﻿@model Web.Models.LoginViewModelExample
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("Login", "ExampleAccount", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new {}))
+{
+    @Html.AntiForgeryToken()
+    @Html.LabelFor(m => m.UserName)
+    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+    @Html.LabelFor(m => m.Password)
+    @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+    @Html.LabelFor(m => m.RememberMe)
+    @Html.CheckBoxFor(m => m.RememberMe)
+    <br/>
+    <button type="submit" class="btn btn-primary" value="Log in">
+        <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
+        Log in
+    </button>
+    <br/>
+    @Html.ActionLink("Forgot password", "ForgotPassword")
+}

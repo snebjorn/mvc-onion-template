@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Data
@@ -69,18 +68,14 @@ namespace Infrastructure.Data
 
         // Last resort!
         // It's best practice to not rely on your ORM to implement IQueryable
-        //public IQueryable<T> AsQueryable()
-        //{
-        //    return _dbSet.AsQueryable();
-        //}
+        public IQueryable<T> AsQueryable()
+        {
+            return _dbSet.AsQueryable();
+        }
 
         public T Create()
         {
             var entity = _dbSet.Create<T>();
-            
-            if (typeof(T) is ICreatedOn)
-                (entity as ICreatedOn).CreatedOn = DateTime.Now;
-            
             return entity;
         }
 
@@ -96,9 +91,6 @@ namespace Infrastructure.Data
 
         public T Insert(T entity)
         {
-            if (typeof(T) is IModifiedOn)
-                (entity as IModifiedOn).ModifiedOn = DateTime.Now;
-
             return _dbSet.Add(entity);
         }
 

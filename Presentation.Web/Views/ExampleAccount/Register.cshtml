@@ -1,0 +1,24 @@
+﻿@model Web.Models.RegisterViewModelExample
+@{
+    ViewBag.Title = "Register";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (@Html.BeginForm("Register", "ExampleAccount", FormMethod.Post, new {})) 
+{
+    @Html.AntiForgeryToken()
+    @Html.LabelFor(m => m.UserName)
+    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+    @Html.LabelFor(m => m.Email)
+    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+    @Html.LabelFor(m => m.Password)
+    @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+    @Html.LabelFor(m => m.ConfirmPassword)
+    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+    <br/>
+    <button type="submit" class="btn btn-primary" value="Register">
+        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+        Register
+    </button>
+}
