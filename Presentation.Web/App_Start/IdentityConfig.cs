@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Net.Mail;
+using System.Net.Mime;
+using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Core.ApplicationServices;
+using Core.ApplicationServices.Mail;
 using Core.DomainModel;
 using Infrastructure.Data;
 using Microsoft.AspNet.Identity;
@@ -8,6 +13,8 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
+using Ninject;
+using Web.Mail;
 
 namespace Web
 {
@@ -58,8 +65,9 @@ namespace Web
                 Subject = "Security Code",
                 BodyFormat = "Your security code is {0}"
             });
-            manager.EmailService = new EmailService();
+
             manager.SmsService = new SmsService();
+            
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
@@ -91,9 +99,44 @@ namespace Web
 
     public class EmailService : IIdentityMessageService
     {
+        private readonly SmtpClient _smtpClient;
+        private readonly IMailHandler _mailHandler;
+
+        public EmailService(
+            SmtpClient smtpClient, 
+            IMailHandler mailHandler)
+        {
+            _smtpClient = smtpClient;
+            _mailHandler = mailHandler;
+        }
+        
+
         public Task SendAsync(IdentityMessage message)
         {
-            // Plug in your email service here to send an email.
+            var mailMessage = new MailMessage()
+            {
+                Subject = message.Subject,
+                IsBodyHtml = true,
+                Body = _mailHandler.GetMailMessage(message)
+            };
+            
+            mailMessage.To.Add(message.Destination);
+
+            // alternate view, for clients that can't view HTML
+            var mimeType = new ContentType("text/html");
+            var alternate = AlternateView.CreateAlternateViewFromString(message.Body, mimeType);
+            mailMessage.AlternateViews.Add(alternate);
+            
+            try
+            {
+                _smtpClient.Send(mailMessage);
+            }
+            catch (Exception e)
+            {
+                // handle error
+                throw;
+            }
+
             return Task.FromResult(0);
         }
     }

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
 using Core.DomainModel;
 using Core.DomainServices;
+using Microsoft.AspNet.Identity;
 using Web.Models;
 
 namespace Web.Controllers
@@ -12,7 +14,9 @@ namespace Web.Controllers
     [Authorize]
     public class StudentController : Controller
     {
+
         private readonly IGenericRepository<Student> _studentRepository;
+        private readonly IIdentityMessageService _emailService;
         private readonly IUnitOfWork _unitOfWork;
 
         // Hardcoded pagingsize
@@ -26,9 +30,10 @@ namespace Web.Controllers
         /// </summary>
         /// <param name="unitOfWork"></param>
         /// <param name="studentRepository"></param>
-        public StudentController(IUnitOfWork unitOfWork, IGenericRepository<Student> studentRepository)
+        public StudentController(IUnitOfWork unitOfWork, IGenericRepository<Student> studentRepository, IIdentityMessageService emailService)
         {
             _studentRepository = studentRepository;
+            _emailService = emailService;
             _unitOfWork = unitOfWork;
         }
 
@@ -132,6 +137,18 @@ namespace Web.Controllers
             var viewmodel = Mapper.Map<StudentViewModel>(student);
 
             return Json(viewmodel, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult TestMail()
+        {
+            return View();
+        }
+
+        public async Task<ActionResult> SendMail(MailViewModel model)
+        {
+            var message = Mapper.Map<IdentityMessage>(model);
+            await _emailService.SendAsync(message);
+            return Json("Ok", JsonRequestBehavior.AllowGet);
         }
     }
 }

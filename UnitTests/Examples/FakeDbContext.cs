@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
 using Faker;
+using Microsoft.AspNet.Identity;
 using NSubstitute;
 using Web.Controllers;
 using Web.Models;
@@ -21,6 +22,7 @@ namespace UnitTests.Examples
         private readonly StudentController _controller;
         private readonly IGenericRepository<Student> _repo;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IIdentityMessageService _mailService;
 
         // Usage of Faker.Net to generate random variables.
         private readonly string _studentName1 = Faker.Name.First();
@@ -31,7 +33,7 @@ namespace UnitTests.Examples
         /// For each test case, the class is instantiated and disposed.
         /// The basic naming of a test comprises of three main parts:
         /// [UnitOfWork_StateUnderTest_ExpectedBehavior]
-        /// Followed by //Arange, //Act and //Assert
+        /// Followed by //Arrange, //Act and //Assert
         /// </summary>
         public FakeDbContext()
         {
@@ -60,18 +62,24 @@ namespace UnitTests.Examples
 
             // A substitute for the UnitOfWork, used when saving context.
             _unitOfWork = Substitute.For<IUnitOfWork>();
-            
+
+            // Substitute for mailservice.
+            _mailService = Substitute.For<IIdentityMessageService>();
+
             // Pass the context to the controller, and use this for testing.
-            _controller = new StudentController(_unitOfWork, _repo);
+            _controller = new StudentController(_unitOfWork, _repo, _mailService);
 
             // The controller uses automapper.
             Mapper.CreateMap<StudentViewModel, Student>().ReverseMap();
+            Mapper.CreateMap<MailViewModel, IdentityMessage>()
+                .ForMember(dest => dest.Body, opts => opts.MapFrom(src => src.Content))
+                .ForMember(dest => dest.Destination, opts => opts.MapFrom(src => src.Email));
         }
         
         [Fact]
         public void IndexStudentsByName_CallingTheMethod_ReturnsStudents()
         {
-            // Arange
+            // Arrange
             // Act
             var res = _controller.IndexStudentsByName();
             // Assert
@@ -82,7 +90,7 @@ namespace UnitTests.Examples
         [Fact]
         public void IndexStudentsById_CallingTheMethod_ReturnsStudents()
         {
-            // Arange
+            // Arrange
             // Act
             var res = _controller.IndexStudentsById();
             // Assert
@@ -93,7 +101,7 @@ namespace UnitTests.Examples
         [Fact]
         public void NewStudent_CanCreateNewStudent_RepositoryReceivedInsertCallAndUnitOfWorkSaved()
         {
-            // Arange
+            // Arrange
             var model = new StudentViewModel() { Name = Name.First() };
             // Act
             _controller.NewStudent(model);
@@ -107,7 +115,7 @@ namespace UnitTests.Examples
         [InlineData(1)]
         public void FindStudent_CanFindStudentWithId_ReturnsANotNullObject(int value)
         {
-            // Arange
+            // Arrange
             // Act
             var res = _controller.FindStudent(value);
             // Assert
@@ -118,7 +126,7 @@ namespace UnitTests.Examples
         [Fact]
         public void FindStudent_CannotFindStudentWithNull_ReturnsJsonWithNullString()
         {
-            // Arange
+            // Arrange
             // Act
             var res = _controller.FindStudent(null) as JsonResult;
             var data = res.Data as StudentViewModel;
@@ -129,7 +137,7 @@ namespace UnitTests.Examples
         [Fact]
         public void FindStudent_CannotFindStudentThatDoesNotExist_ReturnHttpNotFound()
         {
-            // Arange
+            // Arrange
             // Act
             var res = _controller.FindStudent(5);
             // Assert
@@ -139,7 +147,7 @@ namespace UnitTests.Examples
         [Fact]
         public void Index_ReturnsSelectListAndViewModel_TypesAndModelMatchesAndSelectedIdIsZeroAndNameIsNull()
         {
-            // Arange
+            // Arrange
             // Act
             var res = _controller.Index() as ViewResult;
             var viewModel = res.Model as IndexStudentViewModel;
@@ -155,7 +163,7 @@ namespace UnitTests.Examples
         [Fact]
         public void _Students_TablePaging_PagedDataContainsAListOfStudentsAndNumberOfPagesIsZero()
         {
-            // Arange
+            // Arrange
 
             // Act
             var res = _controller._Students(0) as PartialViewResult;
@@ -169,11 +177,37 @@ namespace UnitTests.Examples
         [Fact]
         public void NewStudent_IsWorking_ReturnsAView()
         {
-            // Arange
+            // Arrange
             // Act
             var res = _controller.NewStudent();
             // Assert
             Assert.IsType<ViewResult>(res);
+        }
+
+        [Fact]
+        public void TestMail()
+        {
+            // Arrange
+            // Act
+            var res = _controller.TestMail();
+            // Assert
+            Assert.IsType<ViewResult>(res);
+        }
+
+        [Fact]
+        public async void SendMail()
+        {
+            // Arrange
+            var viewmodel = new MailViewModel()
+            {
+                Content = "Indhold",
+                Email = "a@b.c",
+                Subject = "Overskrift"
+            };
+            // Act
+            await _controller.SendMail(viewmodel);
+            // Assert
+            _mailService.Received().SendAsync(Arg.Any<IdentityMessage>());
         }
     }
 }

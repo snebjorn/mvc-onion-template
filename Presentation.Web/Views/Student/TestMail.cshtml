@@ -1,0 +1,20 @@
+﻿@using Faker
+@model Web.Models.MailViewModel
+<h2>Submit Email</h2>
+
+@using (Html.BeginForm("SendMail", "Student", new { }, FormMethod.Post, new { }))
+{
+    <p>Remember to create a maildrop folder in C:\ if running in debug mode.</p>
+    @Html.AntiForgeryToken()
+    <label>Subject:</label>
+    @Html.TextBoxFor(m => m.Subject, new { @class = "form-control" })
+    <label>To:</label>
+    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+    <br/>
+    @Html.TextAreaFor(m => m.Content)
+    <br/>
+    <button type="submit" class="btn btn-primary" value="Send Mail">
+        <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
+        Send Mail
+    </button>
+}

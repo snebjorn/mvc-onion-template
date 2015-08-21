@@ -1,5 +1,7 @@
-using Core.DomainModel;
-using Microsoft.Owin.Security;
+using System.Net.Mail;
+using Microsoft.AspNet.Identity;
+using RazorEngine.Templating;
+using Web.Mail;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Web.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(Web.App_Start.NinjectWebCommon), "Stop")]
@@ -8,9 +10,7 @@ namespace Web.App_Start
 {
     using System;
     using System.Web;
-
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
-
     using Ninject;
     using Ninject.Web.Common;
     using Infrastructure.Data;
@@ -69,6 +69,13 @@ namespace Web.App_Start
             kernel.Bind<SampleContext>().ToSelf().InRequestScope();
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
             kernel.Bind(typeof(IGenericRepository<>)).To(typeof(GenericRepository<>));
+
+            // Mail
+            kernel.Bind<IRazorEngineService>().ToMethod(m => RazorEngineService.Create());
+            kernel.Bind<SmtpClient>().ToSelf();
+            kernel.Bind<IMailHandler>().To<MailHandler>();
+            kernel.Bind<IIdentityMessageService>().To<EmailService>();
+
         }
     }
 }
