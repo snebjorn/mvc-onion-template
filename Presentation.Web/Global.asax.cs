@@ -14,7 +14,7 @@ namespace Web
             // The database initializer will create the database and the specified tables. 
             // If you're using an existing database with code first, don't execute any logic at all.
 
-            // Database.SetInitializer(new CreateDatabaseIfNotExists<SampleContext>()); // Default
+            // Database.SetInitializer(new CreateDatabaseIfNotExists<SampleContext>()); // Default, will run if nothing is done.
             // The default option. When the application runs the first time, entity framework will create
             // a code first database if it does not already exist. If the database exists and you have done modifications
             // this will throw an InvalidOperationException.
@@ -28,7 +28,7 @@ namespace Web
 
             // Alternatively, you can create your own initializer and pass it as the argument.
             // The class will need to implement one of the above in order to inherit some behaviour.
-            // This SampleInitializer has a custom seeding function, that will populate the database instance
+            // These Initializers has a custom seeding function, that will populate the database instance
             // with some fake data that can be used right away.
             if (Database.Exists("DefaultConnection"))
             {

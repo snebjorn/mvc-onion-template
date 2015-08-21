@@ -200,16 +200,21 @@ namespace UnitTests.Examples
         public async void SendMail()
         {
             // Arrange
-            var viewmodel = new MailViewModel()
+            var model = new MailViewModel()
             {
-                Content = "Indhold",
-                Email = "a@b.c",
-                Subject = "Overskrift"
+                Subject = "",
+                Email = "",
+                Foo = "",
+                Bar = "",
+                Baz = "",
+                Qux = ""
             };
             // Act
-            await _controller.SendMail(viewmodel);
+            _controller.SendMail(model);
             // Assert
-            _mailService.Received().SendAsync(Arg.Any<IdentityMessage>());
+            
+            //_mailHandler.Received().GetMailMessage(model, Arg.Any<string>);
+            
         }
     }
 }
