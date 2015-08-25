@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.DomainModel", "Core.DomainModel\Core.DomainModel.csproj", "{B6DABC90-7B3F-4329-B30B-5E33285003F7}"
 EndProject
@@ -25,11 +25,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation.Web", "Presentation.Web\Presentation.Web.csproj", "{B9B758F7-87AD-4D57-8529-79AF9B8BD855}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.ApplicationServices", "Core.ApplicationServices\Core.ApplicationServices.csproj", "{C208903E-E673-41EB-BC64-3DF229D00890}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{6DE605DD-B0FE-41AD-B642-6D3C08CD5446}"
-	ProjectSection(SolutionItems) = preProject
-		ConnectionStrings.config = ConnectionStrings.config
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{4E44F389-59E7-4304-9A3D-1319B55E6FA5}"
 EndProject
