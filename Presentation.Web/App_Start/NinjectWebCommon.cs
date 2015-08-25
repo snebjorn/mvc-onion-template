@@ -1,21 +1,21 @@
+using System;
 using System.Net.Mail;
+using System.Web;
+using Core.DomainServices;
+using Infrastructure.Data;
 using Microsoft.AspNet.Identity;
+using Microsoft.Web.Infrastructure.DynamicModuleHelper;
+using Ninject;
+using Ninject.Web.Common;
+using Presentation.Web.App_Start;
+using Presentation.Web.Mail;
 using RazorEngine.Templating;
-using Web.Mail;
 
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Web.App_Start.NinjectWebCommon), "Start")]
-[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(Web.App_Start.NinjectWebCommon), "Stop")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(NinjectWebCommon), "Start")]
+[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(NinjectWebCommon), "Stop")]
 
-namespace Web.App_Start
+namespace Presentation.Web.App_Start
 {
-    using System;
-    using System.Web;
-    using Microsoft.Web.Infrastructure.DynamicModuleHelper;
-    using Ninject;
-    using Ninject.Web.Common;
-    using Infrastructure.Data;
-    using Core.DomainServices;
-
     public static class NinjectWebCommon 
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();

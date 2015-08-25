@@ -1,18 +1,9 @@
 ﻿using System.Web.Mvc;
-using Core.DomainServices;
-using Core.DomainModel;
 
-namespace Web.Controllers
+namespace Presentation.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IGenericRepository<Student> _repo;
-
-        public HomeController(IGenericRepository<Student> repo)
-        {
-            _repo = repo;
-        }
-
         public ActionResult Index()
         {
             return View();

@@ -3,8 +3,9 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Infrastructure.Data;
+using Presentation.Web.App_Start;
 
-namespace Web
+namespace Presentation.Web
 {
     public class MvcApplication : System.Web.HttpApplication
     {

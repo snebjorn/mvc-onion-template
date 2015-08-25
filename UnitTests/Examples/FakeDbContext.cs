@@ -5,9 +5,9 @@ using System.Web.Mvc;
 using Faker;
 using Microsoft.AspNet.Identity;
 using NSubstitute;
-using Web.Controllers;
-using Web.Mail;
-using Web.Models;
+using Presentation.Web.Controllers;
+using Presentation.Web.Mail;
+using Presentation.Web.Models;
 using Xunit;
 using Core.DomainServices;
 using Core.DomainModel;
@@ -23,12 +23,10 @@ namespace UnitTests.Examples
         private readonly StudentController _controller;
         private readonly IGenericRepository<Student> _repo;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IIdentityMessageService _mailService;
-        private IMailHandler _mailHandler;
 
         // Usage of Faker.Net to generate random variables.
-        private readonly string _studentName1 = Faker.Name.First();
-        private readonly string _studentName2 = Faker.Name.First();
+        private readonly string _studentName1 = Name.First();
+        private readonly string _studentName2 = Name.First();
 
         /// <summary>
         /// Constructor for the test cases.
@@ -66,13 +64,13 @@ namespace UnitTests.Examples
             _unitOfWork = Substitute.For<IUnitOfWork>();
 
             // Substitute for mailservice.
-            _mailService = Substitute.For<IIdentityMessageService>();
+            var mailService = Substitute.For<IIdentityMessageService>();
 
             // Substitute for mailHandler.
-            _mailHandler = Substitute.For<IMailHandler>();
+            var mailHandler = Substitute.For<IMailHandler>();
 
             // Pass the context to the controller, and use this for testing.
-            _controller = new StudentController(_unitOfWork, _repo, _mailService, _mailHandler);
+            _controller = new StudentController(_unitOfWork, _repo, mailService, mailHandler);
 
             // The controller uses automapper.
             Mapper.CreateMap<StudentViewModel, Student>().ReverseMap();
@@ -218,4 +216,3 @@ namespace UnitTests.Examples
         }
     }
 }
-

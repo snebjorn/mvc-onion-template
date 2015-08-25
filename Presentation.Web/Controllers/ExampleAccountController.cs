@@ -4,9 +4,10 @@ using System.Web.Mvc;
 using Core.DomainModel;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using Web.Models;
+using Presentation.Web.App_Start;
+using Presentation.Web.Models;
 
-namespace Web.Controllers
+namespace Presentation.Web.Controllers
 {
     public class ExampleAccountController : Controller
     {

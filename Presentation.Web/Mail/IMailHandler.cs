@@ -1,4 +1,4 @@
-﻿namespace Web.Mail
+﻿namespace Presentation.Web.Mail
 {
     public interface IMailHandler
     {

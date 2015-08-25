@@ -2,7 +2,7 @@
 using System.IO;
 using RazorEngine.Templating;
 
-namespace Web.Mail
+namespace Presentation.Web.Mail
 {
     public class MailHandler : IMailHandler
     {

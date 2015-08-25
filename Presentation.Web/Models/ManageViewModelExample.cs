@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Web.Models
+﻿namespace Presentation.Web.Models
 {
     public class ManageIndexViewModelExample
     {

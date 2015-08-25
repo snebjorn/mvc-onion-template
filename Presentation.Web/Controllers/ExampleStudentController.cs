@@ -7,10 +7,10 @@ using AutoMapper;
 using Core.DomainModel;
 using Core.DomainServices;
 using Microsoft.AspNet.Identity;
-using Web.Mail;
-using Web.Models;
+using Presentation.Web.Mail;
+using Presentation.Web.Models;
 
-namespace Web.Controllers
+namespace Presentation.Web.Controllers
 {
     [Authorize]
     public class StudentController : Controller

@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using Core.DomainModel;
-using Web.Models;
+using Presentation.Web.App_Start;
+using Presentation.Web.Models;
 
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Web.App_Start.MappingConfig), "Start")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(MappingConfig), "Start")]
 
-namespace Web.App_Start
+namespace Presentation.Web.App_Start
 {
     /// <summary>
     /// Automapper is used to map attributes from your viewmodels to your domain models and vice versa,
