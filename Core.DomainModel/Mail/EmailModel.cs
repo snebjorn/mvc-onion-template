@@ -1,4 +1,4 @@
-﻿namespace Core.ApplicationServices.Mail
+﻿namespace Core.DomainModel.Mail
 {
     public class EmailModel
     {

@@ -1,5 +1,4 @@
-﻿using Core.DomainModel;
-using Core.DomainServices;
+﻿using Core.DomainServices;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -28,7 +27,7 @@ namespace Infrastructure.Data
             int? page = null,
             int? pageSize = null)
         {
-            IQueryable<T> query = FilterLogic(filter, orderBy, includeProperties, page, pageSize);
+            var query = FilterLogic(filter, orderBy, includeProperties, page, pageSize);
             return query.ToList();
         }
 
@@ -39,7 +38,7 @@ namespace Infrastructure.Data
             int? page = null,
             int? pageSize = null)
         {
-            IQueryable<T> query = FilterLogic(filter, orderBy, includeProperties, page, pageSize);
+            var query = FilterLogic(filter, orderBy, includeProperties, page, pageSize);
             return await query.ToListAsync();
         }
 
