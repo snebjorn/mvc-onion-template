@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Data.Entity.Validation;
 using System.Diagnostics;
 
-namespace Infrastructure.Data
+namespace Infrastructure.DataAccess
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Core.DomainModel;
 using Faker;
 
-namespace Infrastructure.Data.Seeding
+namespace Infrastructure.DataAccess.Seeding
 {
     /// <summary>
     /// Examples of functions that uses Faker.Net to generate data and 

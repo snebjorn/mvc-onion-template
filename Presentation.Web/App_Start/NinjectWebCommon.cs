@@ -2,7 +2,7 @@ using System;
 using System.Net.Mail;
 using System.Web;
 using Core.DomainServices;
-using Infrastructure.Data;
+using Infrastructure.DataAccess;
 using Microsoft.AspNet.Identity;
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using Ninject;
@@ -68,6 +68,7 @@ namespace Presentation.Web.App_Start
         {
             kernel.Bind<SampleContext>().ToSelf().InRequestScope();
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
+            // Binding trick to avoid having to bind all usages of IGenericRepository. This binds them all!
             kernel.Bind(typeof(IGenericRepository<>)).To(typeof(GenericRepository<>));
 
             // Mail
@@ -75,7 +76,6 @@ namespace Presentation.Web.App_Start
             kernel.Bind<SmtpClient>().ToSelf();
             kernel.Bind<IMailHandler>().To<MailHandler>();
             kernel.Bind<IIdentityMessageService>().To<EmailService>();
-
         }
     }
 }

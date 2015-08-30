@@ -1,9 +1,9 @@
 ﻿using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Data.Entity;
-using Infrastructure.Data.Seeding;
+using Infrastructure.DataAccess.Seeding;
 
-namespace Infrastructure.Data
+namespace Infrastructure.DataAccess
 {
     public class CreateSampleSeedInitializer : CreateDatabaseIfNotExists<SampleContext>
     {

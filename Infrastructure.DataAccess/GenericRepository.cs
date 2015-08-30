@@ -6,7 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Data
+namespace Infrastructure.DataAccess
 {
     public class GenericRepository<T> : IGenericRepository<T> 
         where T : class

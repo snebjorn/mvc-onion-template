@@ -3,7 +3,7 @@ using Core.DomainModel;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 
-namespace Infrastructure.Data
+namespace Infrastructure.DataAccess
 {
     public class SampleContext : IdentityDbContext<ApplicationUser>
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 using Core.DomainModel;
-using Infrastructure.Data;
+using Infrastructure.DataAccess;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
