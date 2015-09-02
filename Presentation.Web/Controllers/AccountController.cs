@@ -6,10 +6,11 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Presentation.Web.App_Start;
 using Presentation.Web.Models;
+using Presentation.Web.Models.Account;
 
 namespace Presentation.Web.Controllers
 {
-    public class ExampleAccountController : Controller
+    public class AccountController : Controller
     {
         // Standard asp.net classes to manage users.
         private ApplicationUserManager _userManager;
@@ -50,7 +51,7 @@ namespace Presentation.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModelExample model)
+        public async Task<ActionResult> Register(RegisterViewModel model)
         {
             if (model.Password != model.ConfirmPassword)
                 return View(model);
@@ -78,7 +79,7 @@ namespace Presentation.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModelExample model, string returnUrl)
+        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
             var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
 
@@ -87,7 +88,7 @@ namespace Presentation.Web.Controllers
                 case SignInStatus.Success:
                     return RedirectToAction("Index", "Home");
                 case SignInStatus.Failure:
-                    return RedirectToAction("Login", "ExampleAccount");
+                    return RedirectToAction("Login", "Account");
             }
             
             return View();
@@ -110,7 +111,7 @@ namespace Presentation.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModelExample model)
+        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
             var user = await UserManager.FindByEmailAsync(model.Email);
             if (user == null || !(await _userManager.IsEmailConfirmedAsync(user.Id)))

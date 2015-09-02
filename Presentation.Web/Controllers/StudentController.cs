@@ -9,6 +9,7 @@ using Core.DomainServices;
 using Microsoft.AspNet.Identity;
 using Presentation.Web.Mail;
 using Presentation.Web.Models;
+using Presentation.Web.Models.Student;
 
 namespace Presentation.Web.Controllers
 {
@@ -55,13 +56,13 @@ namespace Presentation.Web.Controllers
                 });
 
             // Example of paging students in a table.
-            var model = new IndexStudentViewModel()
+            var model = new IndexViewModel()
             {
                 PagedStudents =
-                    new PagedData<StudentViewModel>()
+                    new PagedData<NewStudentViewModel>()
                     {
                         // Always configure automapper into mapping viewmodels against domainmodels.
-                        Data = Mapper.Map<List<Student>, List<StudentViewModel>>(_studentRepository.AsQueryable().OrderBy(p => p.Name).Take(PageSize).ToList()).ToList(),
+                        Data = Mapper.Map<List<Student>, List<NewStudentViewModel>>(_studentRepository.AsQueryable().OrderBy(p => p.Name).Take(PageSize).ToList()).ToList(),
                         NumberOfPages = PagingsSizeHelper()
                     }
             };
@@ -75,12 +76,12 @@ namespace Presentation.Web.Controllers
 
         public ActionResult _Students(int page)
         {
-            var model = new IndexStudentViewModel()
+            var model = new IndexViewModel()
             {
-                PagedStudents = new PagedData<StudentViewModel>()
+                PagedStudents = new PagedData<NewStudentViewModel>()
                 {
                     // Always configure automapper into mapping viewmodels against domainmodels.
-                    Data = Mapper.Map<List<Student>, List<StudentViewModel>>(_studentRepository.AsQueryable().OrderBy(p => p.Name).Skip(PageSize * (page - 1)).Take(PageSize).ToList()),
+                    Data = Mapper.Map<List<Student>, List<NewStudentViewModel>>(_studentRepository.AsQueryable().OrderBy(p => p.Name).Skip(PageSize * (page - 1)).Take(PageSize).ToList()),
                     NumberOfPages = PagingsSizeHelper()
                 }
             };
@@ -94,7 +95,7 @@ namespace Presentation.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult NewStudent(StudentViewModel model)
+        public ActionResult NewStudent(NewStudentViewModel model)
         {
             // Configure automapper into mapping viewmodels against domainmodels.
             // This can also be done conversely.
@@ -111,14 +112,14 @@ namespace Presentation.Web.Controllers
         /// Functions used in UnitTest Examples - How to test a controller (FakeDbContext).
         /// </summary>
         /// <returns></returns>
-        public List<StudentViewModel> IndexStudentsById()
+        public List<NewStudentViewModel> IndexStudentsById()
         {   
-            return Mapper.Map<List<Student>, List<StudentViewModel>>(_studentRepository.AsQueryable().OrderBy(p => p.Id).ToList());
+            return Mapper.Map<List<Student>, List<NewStudentViewModel>>(_studentRepository.AsQueryable().OrderBy(p => p.Id).ToList());
         }
 
-        public List<StudentViewModel> IndexStudentsByName()
+        public List<NewStudentViewModel> IndexStudentsByName()
         {
-            return Mapper.Map<List<Student>, List<StudentViewModel>>(_studentRepository.AsQueryable().OrderBy(p => p.Name).ToList());
+            return Mapper.Map<List<Student>, List<NewStudentViewModel>>(_studentRepository.AsQueryable().OrderBy(p => p.Name).ToList());
         }
 
         /// <summary>
@@ -130,19 +131,19 @@ namespace Presentation.Web.Controllers
         public ActionResult FindStudent(int? id)
         {
             if (id == null)
-                return Json(new StudentViewModel(){ Name = "null" }, JsonRequestBehavior.AllowGet);
+                return Json(new NewStudentViewModel(){ Name = "null" }, JsonRequestBehavior.AllowGet);
 
             var student = _studentRepository.AsQueryable().SingleOrDefault(x => x.Id == id);
 
             if (student == null)
                 return HttpNotFound();
 
-            var viewmodel = Mapper.Map<StudentViewModel>(student);
+            var viewmodel = Mapper.Map<NewStudentViewModel>(student);
 
             return Json(viewmodel, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult TestMail()
+        public ActionResult Mail()
         {
             return View();
         }

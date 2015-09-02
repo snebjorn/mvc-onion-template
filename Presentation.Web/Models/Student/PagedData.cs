@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Presentation.Web.Models
+namespace Presentation.Web.Models.Student
 {
     public class PagedData<T> where T : class
     {

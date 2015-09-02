@@ -1,4 +1,4 @@
-﻿@model Presentation.Web.Models.IndexStudentViewModel
+﻿@model Presentation.Web.Models.Student.IndexViewModel
 @{
     ViewBag.Title = "Index";
 }
@@ -41,12 +41,12 @@
 
 <hr />
 
-@Html.ActionLink("Send mail", "TestMail")
+@Html.ActionLink("Send mail", "Mail")
 
 <hr />
 
+<p>Students Paging Example:</p>
 <div id="students">
-    Students Paging Example:
     @Html.Partial("_Students")
 </div>
 
@@ -59,33 +59,33 @@
             // Binding the html buttons to javascript functions.
             $("#findButton").on('click', findStudent);
 
-            // This binding is located in a function, so we are able to reuse it easy. 
-            bindPaging();
+            // Setup click binding on page numbers
+            // Different from above because the event handlers are detached when the attached DOM is changed
+            $(document).on("click", ".page-number", bindingSetup);
 
             function findStudent() {
                 // Get base url and open the path to the student.  
-                window.open(location.origin + "/Student/FindStudent/" + document.getElementById("Id").value);
+                window.open(location.origin + "/Student/FindStudent/" + $("#Id").val());
             }
 
-            function paging() {
-                var page = parseInt($(this).html());
-
+            function paging(pageNumber) {
                 $.ajax({
                     url: '@Url.Action("_Students")',
-                    data: { "page": page },
-                    success: function (data) {
-                        $("#students").html(data);
-                    }
-                }).done(function () {
-                    // We bind it again in this callback, 
-                    // because reloading the content of the partial
-                    // will unbind the previous bindings.
-                    bindPaging();
+                    data: { "page": pageNumber },
+                    success: pageingAjaxCallback
                 });
             };
 
-            function bindPaging() {
-                $(".page-number").on("click", paging);
+            function pageingAjaxCallback(data) {
+                $("#students").html(data);
+            }
+
+            function bindingSetup(e) {
+                e.preventDefault();
+
+                var pageNumber = $(e.toElement).data("page-number");
+
+                paging(pageNumber);
             }
         });
     </script>
