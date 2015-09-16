@@ -8,10 +8,12 @@ using NSubstitute;
 using Presentation.Web.Controllers;
 using Presentation.Web.Mail;
 using Presentation.Web.Models;
+using Presentation.Web.Models.Student;
 using Xunit;
 using Core.DomainServices;
 using Core.DomainModel;
 using AutoMapper;
+using IndexViewModel = Presentation.Web.Models.Student.IndexViewModel;
 
 namespace UnitTests.Examples
 {
@@ -73,7 +75,7 @@ namespace UnitTests.Examples
             _controller = new StudentController(_unitOfWork, _repo, mailService, mailHandler);
 
             // The controller uses automapper.
-            Mapper.CreateMap<StudentViewModel, Student>().ReverseMap();
+            Mapper.CreateMap<NewStudentViewModel, Student>().ReverseMap();
         }
         
         [Fact]
@@ -102,7 +104,7 @@ namespace UnitTests.Examples
         public void NewStudent_CanCreateNewStudent_RepositoryReceivedInsertCallAndUnitOfWorkSaved()
         {
             // Arrange
-            var model = new StudentViewModel() { Name = Name.First() };
+            var model = new NewStudentViewModel() { Name = Name.First() };
             // Act
             _controller.NewStudent(model);
             // Assert
@@ -129,7 +131,7 @@ namespace UnitTests.Examples
             // Arrange
             // Act
             var res = _controller.FindStudent(null) as JsonResult;
-            var data = res.Data as StudentViewModel;
+            var data = res.Data as NewStudentViewModel;
             // Assert
             Assert.Equal("null", data.Name);
         }
@@ -150,7 +152,7 @@ namespace UnitTests.Examples
             // Arrange
             // Act
             var res = _controller.Index() as ViewResult;
-            var viewModel = res.Model as IndexStudentViewModel;
+            var viewModel = res.Model as IndexViewModel;
             var selectList = res.ViewBag.StudentIds;
             // Assert
             Assert.NotNull(viewModel.PagedStudents);
@@ -167,10 +169,10 @@ namespace UnitTests.Examples
 
             // Act
             var res = _controller._Students(0) as PartialViewResult;
-            var viewModel = res.Model as IndexStudentViewModel;
+            var viewModel = res.Model as IndexViewModel;
             var pagedData = viewModel.PagedStudents;
             // Assert
-            Assert.IsType<List<StudentViewModel>>(pagedData.Data);
+            Assert.IsType<List<NewStudentViewModel>>(pagedData.Data);
             Assert.True(pagedData.NumberOfPages == 0);
         }
 
@@ -189,13 +191,13 @@ namespace UnitTests.Examples
         {
             // Arrange
             // Act
-            var res = _controller.TestMail();
+            var res = _controller.Mail();
             // Assert
             Assert.IsType<ViewResult>(res);
         }
 
         [Fact]
-        public async void SendMail()
+        public void SendMail()
         {
             // Arrange
             var model = new MailViewModel()

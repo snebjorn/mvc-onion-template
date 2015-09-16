@@ -7,11 +7,12 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Presentation.Web.App_Start;
 using Presentation.Web.Models;
+using Presentation.Web.Models.Manage;
 
 namespace Presentation.Web.Controllers
 {
     [Authorize]
-    public class ExampleManageController : Controller
+    public class ManageController : Controller
     {
         private ApplicationUserManager _userManager;
         private IAuthenticationManager AuthenticationManager
@@ -32,7 +33,7 @@ namespace Presentation.Web.Controllers
         
         public ActionResult Index()
         {
-            var model = new ManageIndexViewModelExample
+            var model = new IndexViewModel
             {
                 HasPassword = HasPassword()
             };
@@ -47,7 +48,7 @@ namespace Presentation.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ChangePassword(ChangePasswordViewModelExample model)
+        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
         {
             var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
             

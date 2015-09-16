@@ -1,4 +1,4 @@
-﻿@model Presentation.Web.Models.IndexStudentViewModel
+﻿@model Presentation.Web.Models.Student.IndexViewModel
 
 @{
     <table class="table table-striped table-bordered table-condensed">
@@ -38,10 +38,10 @@
     </table>
 
     <ul class="pagination">
-        @for (int i = 1; i <= Model.PagedStudents.NumberOfPages; i++)
+        @for (var i = 1; i <= Model.PagedStudents.NumberOfPages; i++)
         {
             <li>
-                <a href="javascript:void(0)" class="page-number" href="javascript:void(null)">
+                <a href="#" data-page-number="@i" class="page-number">
                     @i
                 </a>
             </li>

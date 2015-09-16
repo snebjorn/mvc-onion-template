@@ -1,11 +1,11 @@
-﻿@model Presentation.Web.Models.LoginViewModelExample
+﻿@model Presentation.Web.Models.Account.LoginViewModel
 @{
     ViewBag.Title = "Login";
 }
 
 <h2>@ViewBag.Title</h2>
 
-@using (Html.BeginForm("Login", "ExampleAccount", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new {}))
+@using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new {}))
 {
     @Html.AntiForgeryToken()
     @Html.LabelFor(m => m.UserName)
