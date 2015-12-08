@@ -2,6 +2,7 @@
 using System.Web;
 using System.Web.Mvc;
 using Core.DomainModel;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Presentation.Web.App_Start;
@@ -21,7 +22,7 @@ namespace Presentation.Web.Controllers
             {
                 return HttpContext.GetOwinContext().Authentication;
             }
-        }   
+        }
         public ApplicationUserManager UserManager
         {
             get
@@ -41,31 +42,39 @@ namespace Presentation.Web.Controllers
             }
             private set { _signInManager = value; }
         }
-        
+
         [AllowAnonymous]
         public ActionResult Register()
         {
             return View();
         }
 
+        // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-            if (model.Password != model.ConfirmPassword)
-                return View(model);
-            
-            var user = new ApplicationUser() { UserName = model.UserName, Email = model.Email };
-
-            var result = await UserManager.CreateAsync(user, model.Password);
-            
-            if(result.Succeeded)
+            if (ModelState.IsValid)
             {
-                await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                return RedirectToAction("Index", "Home");
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
+                    // Send an email with this link
+                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                    return RedirectToAction("Index", "Home");
+                }
+                AddErrors(result);
             }
 
+            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -76,22 +85,31 @@ namespace Presentation.Web.Controllers
             return View();
         }
 
+        // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
-            var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
 
+            // This doesn't count login failures towards account lockout
+            // To enable password failures to trigger account lockout, change to shouldLockout: true
+            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToLocal(returnUrl);
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
                 case SignInStatus.Failure:
-                    return RedirectToAction("Login", "Account");
+                default:
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                    return View(model);
             }
-            
-            return View();
         }
 
         [HttpPost]
@@ -107,7 +125,7 @@ namespace Presentation.Web.Controllers
         {
             return View();
         }
-        
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -119,10 +137,26 @@ namespace Presentation.Web.Controllers
                 // Handle "user not found"
             }
             // Send email to the user with instructions on how to reset the password.
-            
+
             // If it reaches this, then something failed and we redisplay the form.
             return View(model);
         }
-        
+
+        private ActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error);
+            }
+        }
     }
 }
