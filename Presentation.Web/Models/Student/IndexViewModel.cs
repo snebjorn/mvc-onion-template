@@ -7,6 +7,6 @@ namespace Presentation.Web.Models.Student
         [Display(Name = "Student Name:")]
         public string Name { get; set; }
         public int SelectedId { get; set; }
-        public PagedData<NewStudentViewModel> PagedStudents { get; set; } 
+        public PagedData<NewStudentViewModel> PagedStudents { get; set; }
     }
 }

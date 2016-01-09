@@ -19,7 +19,7 @@ namespace Presentation.Web.App_Start
         {
         }
 
-        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
+        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
         {
             var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<SampleContext>()));
 
@@ -29,7 +29,7 @@ namespace Presentation.Web.App_Start
                 AllowOnlyAlphanumericUserNames = false,
                 RequireUniqueEmail = true
             };
-            
+
             // Configure validation logic for passwords
             manager.PasswordValidator = new PasswordValidator
             {
@@ -60,11 +60,11 @@ namespace Presentation.Web.App_Start
             });
 
             manager.SmsService = new SmsService();
-            
+
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
-                manager.UserTokenProvider = 
+                manager.UserTokenProvider =
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;

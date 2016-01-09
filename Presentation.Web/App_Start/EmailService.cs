@@ -23,14 +23,14 @@ namespace Presentation.Web.App_Start
                 IsBodyHtml = true,
                 Body = message.Body
             };
-            
+
             mailMessage.To.Add(message.Destination);
 
             // alternate view, for clients that can't view HTML
             var mimeType = new ContentType("text/html");
             var alternate = AlternateView.CreateAlternateViewFromString(message.Body, mimeType);
             mailMessage.AlternateViews.Add(alternate);
-            
+
             try
             {
                 _smtpClient.SendAsync(mailMessage, null);

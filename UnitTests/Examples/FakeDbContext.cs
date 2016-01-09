@@ -7,7 +7,6 @@ using Microsoft.AspNet.Identity;
 using NSubstitute;
 using Presentation.Web.Controllers;
 using Presentation.Web.Mail;
-using Presentation.Web.Models;
 using Presentation.Web.Models.Student;
 using Xunit;
 using Core.DomainServices;
@@ -77,7 +76,7 @@ namespace UnitTests.Examples
             // The controller uses automapper.
             Mapper.CreateMap<NewStudentViewModel, Student>().ReverseMap();
         }
-        
+
         [Fact]
         public void IndexStudentsByName_CallingTheMethod_ReturnsStudents()
         {
@@ -88,7 +87,7 @@ namespace UnitTests.Examples
             Assert.True(res.FindIndex(d => d.Name == _studentName1) > -1);
             Assert.True(res.FindIndex(d => d.Name == _studentName2) > -1);
         }
-        
+
         [Fact]
         public void IndexStudentsById_CallingTheMethod_ReturnsStudents()
         {
@@ -212,9 +211,9 @@ namespace UnitTests.Examples
             // Act
             _controller.SendMail(model);
             // Assert
-            
+
             //_mailHandler.Received().GetMailMessage(model, Arg.Any<string>);
-            
+
         }
     }
 }

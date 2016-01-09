@@ -1,7 +1,7 @@
-﻿using System.Data.Entity;
-using Core.DomainModel;
+﻿using Core.DomainModel;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
+using System.Data.Entity;
 
 namespace Infrastructure.DataAccess
 {
@@ -13,7 +13,7 @@ namespace Infrastructure.DataAccess
             : base("DefaultConnection", throwIfV1Schema: false)
         {
             // Database.SetInitializer<SampleContext>(null);
-            // The database initializer will create the database and the specified tables. 
+            // The database initializer will create the database and the specified tables.
             // If you're using an existing database with code first, don't execute any logic at all.
 
             // Database.SetInitializer(new CreateDatabaseIfNotExists<SampleContext>()); // Default, will run if nothing is done.
@@ -37,7 +37,7 @@ namespace Infrastructure.DataAccess
                 // Runs if a database already exists. It drops the database, recreates it and seeds with some fake data.
                 Database.SetInitializer(new ChangeSampleSeedInitializer());
             }
-            else 
+            else
             {
                 // This initilizer will run if there are no database.
                 // Usually this is on the first run, or if the database was deleted.
@@ -51,7 +51,7 @@ namespace Infrastructure.DataAccess
             return new SampleContext();
         }
 
-        // Define you conceptual model here. Entity Framework will include these types and all their references. 
+        // Define you conceptual model here. Entity Framework will include these types and all their references.
         public IDbSet<Student> Students { get; set; }
         public IDbSet<Teacher> Teachers { get; set; }
         public IDbSet<Course> Courses { get; set; }

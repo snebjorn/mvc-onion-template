@@ -30,7 +30,7 @@ namespace Presentation.Web.Controllers
                 _userManager = value;
             }
         }
-        
+
         public ActionResult Index()
         {
             var model = new IndexViewModel
@@ -51,7 +51,7 @@ namespace Presentation.Web.Controllers
         public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
         {
             var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
-            
+
             if (result.Succeeded)
             {
                 var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
@@ -61,7 +61,7 @@ namespace Presentation.Web.Controllers
                 }
                 return RedirectToAction("Index", "Home");
             }
-            
+
             return View(model);
         }
 

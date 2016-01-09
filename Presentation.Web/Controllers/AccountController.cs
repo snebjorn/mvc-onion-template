@@ -21,7 +21,7 @@ namespace Presentation.Web.Controllers
             {
                 return HttpContext.GetOwinContext().Authentication;
             }
-        }   
+        }
         public ApplicationUserManager UserManager
         {
             get
@@ -41,7 +41,7 @@ namespace Presentation.Web.Controllers
             }
             private set { _signInManager = value; }
         }
-        
+
         [AllowAnonymous]
         public ActionResult Register()
         {
@@ -55,11 +55,11 @@ namespace Presentation.Web.Controllers
         {
             if (model.Password != model.ConfirmPassword)
                 return View(model);
-            
+
             var user = new ApplicationUser() { UserName = model.UserName, Email = model.Email };
 
             var result = await UserManager.CreateAsync(user, model.Password);
-            
+
             if(result.Succeeded)
             {
                 await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
@@ -90,7 +90,7 @@ namespace Presentation.Web.Controllers
                 case SignInStatus.Failure:
                     return RedirectToAction("Login", "Account");
             }
-            
+
             return View();
         }
 
@@ -107,7 +107,7 @@ namespace Presentation.Web.Controllers
         {
             return View();
         }
-        
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -119,10 +119,10 @@ namespace Presentation.Web.Controllers
                 // Handle "user not found"
             }
             // Send email to the user with instructions on how to reset the password.
-            
+
             // If it reaches this, then something failed and we redisplay the form.
             return View(model);
         }
-        
+
     }
 }

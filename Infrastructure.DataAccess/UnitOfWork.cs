@@ -55,7 +55,7 @@ namespace Infrastructure.DataAccess
         }
 
         #region IDisposable
-        
+
         private bool _disposed = false;
 
         protected virtual void Dispose(bool disposing)

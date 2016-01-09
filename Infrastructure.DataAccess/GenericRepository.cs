@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.DataAccess
 {
-    public class GenericRepository<T> : IGenericRepository<T> 
+    public class GenericRepository<T> : IGenericRepository<T>
         where T : class
     {
         private readonly SampleContext _context;
@@ -96,10 +96,10 @@ namespace Infrastructure.DataAccess
         public void DeleteByKey(params object[] key)
         {
             var entityToDelete = _dbSet.Find(key);
-            
+
             if (_context.Entry(entityToDelete).State == EntityState.Detached)
                 _dbSet.Attach(entityToDelete);
-            
+
             _dbSet.Remove(entityToDelete);
         }
 

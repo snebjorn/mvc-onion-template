@@ -7,7 +7,7 @@ namespace Presentation.Web.Mail
     public class MailHandler : IMailHandler
     {
         private readonly IRazorEngineService _engineService;
-        
+
         public MailHandler(
             IRazorEngineService engineService)
         {
