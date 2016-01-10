@@ -66,7 +66,7 @@ namespace Infrastructure.DataAccess
         }
 
         // Last resort!
-        // It's best practice to not rely on your ORM to implement IQueryable
+        // It's best practice to not rely on your ORM to implement IQueryable.
         public IQueryable<T> AsQueryable()
         {
             return _dbSet.AsQueryable();

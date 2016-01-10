@@ -8,15 +8,12 @@ using Core.DomainModel;
 using Core.DomainServices;
 using Microsoft.AspNet.Identity;
 using Presentation.Web.Mail;
-using Presentation.Web.Models;
 using Presentation.Web.Models.Student;
 
 namespace Presentation.Web.Controllers
 {
-    [Authorize]
     public class StudentController : Controller
     {
-
         private readonly IGenericRepository<Student> _studentRepository;
         private readonly IIdentityMessageService _emailService;
         private readonly IMailHandler _mailHandler;

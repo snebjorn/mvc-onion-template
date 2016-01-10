@@ -10,6 +10,8 @@ using Ninject.Web.Common;
 using Presentation.Web.App_Start;
 using Presentation.Web.Mail;
 using RazorEngine.Templating;
+using Microsoft.Owin.Security;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(NinjectWebCommon), "Stop")]
@@ -42,7 +44,7 @@ namespace Presentation.Web.App_Start
         /// Creates the kernel that will manage your application.
         /// </summary>
         /// <returns>The created kernel.</returns>
-        private static IKernel CreateKernel()
+        public static IKernel CreateKernel()
         {
             var kernel = new StandardKernel();
             try
@@ -70,6 +72,10 @@ namespace Presentation.Web.App_Start
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
             // Binding trick to avoid having to bind all usages of IGenericRepository. This binds them all!
             kernel.Bind(typeof(IGenericRepository<>)).To(typeof(GenericRepository<>));
+
+            // Identity
+            kernel.Bind(typeof(IUserStore<>)).To(typeof(UserStore<>)).InRequestScope().WithConstructorArgument("context", kernel.Get<SampleContext>());
+            kernel.Bind<IAuthenticationManager>().ToMethod(c => HttpContext.Current.GetOwinContext().Authentication).InRequestScope();
 
             // Mail
             kernel.Bind<IRazorEngineService>().ToMethod(m => RazorEngineService.Create());

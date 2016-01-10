@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using Core.DomainModel;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Presentation.Web.App_Start;
@@ -13,33 +13,15 @@ namespace Presentation.Web.Controllers
     public class AccountController : Controller
     {
         // Standard asp.net classes to manage users.
-        private ApplicationUserManager _userManager;
-        private ApplicationSignInManager _signInManager;
-        private IAuthenticationManager AuthenticationManager
+        private readonly ApplicationUserManager _userManager;
+        private readonly ApplicationSignInManager _signInManager;
+        private readonly IAuthenticationManager _authenticationManager;
+
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IAuthenticationManager authenticationManager)
         {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
-        }
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
-        public ApplicationSignInManager SignInManager
-        {
-            get
-            {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            }
-            private set { _signInManager = value; }
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _authenticationManager = authenticationManager;
         }
 
         [AllowAnonymous]
@@ -48,25 +30,50 @@ namespace Presentation.Web.Controllers
             return View();
         }
 
+        // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-            if (model.Password != model.ConfirmPassword)
-                return View(model);
-
-            var user = new ApplicationUser() { UserName = model.UserName, Email = model.Email };
-
-            var result = await UserManager.CreateAsync(user, model.Password);
-
-            if(result.Succeeded)
+            if (ModelState.IsValid)
             {
-                await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                return RedirectToAction("Index", "Home");
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    // Comment the following line to prevent log in until the user is confirmed.
+                    await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
+                    // Send an email with this link
+                    // string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account");
+
+                    // ViewBag.Message = "Check your email and confirm your account, you must be confirmed before you can log in.";
+
+                    // return View("Info");
+
+                    return RedirectToAction("Index", "Home");
+                }
+                AddErrors(result);
             }
 
+            // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        private async Task<string> SendEmailConfirmationTokenAsync(string userID, string subject)
+        {
+            string code = await _userManager.GenerateEmailConfirmationTokenAsync(userID);
+            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = userID, code = code }, protocol: Request.Url.Scheme);
+            await _userManager.SendEmailAsync(userID, subject, "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+            return callbackUrl;
+        }
+
+        public ActionResult ConfirmEmail()
+        {
+            return View();
         }
 
         [AllowAnonymous]
@@ -76,29 +83,51 @@ namespace Presentation.Web.Controllers
             return View();
         }
 
+        // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
-            var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
 
+            // Uncomment to require the user to have a confirmed email before they can log on.
+            // var user = await _userManager.FindByNameAsync(model.Email);
+            // if (user != null)
+            // {
+            //     if (!await _userManager.IsEmailConfirmedAsync(user.Id))
+            //     {
+            //         string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account-Resend");
+            //
+            //         ViewBag.ErrorMessage = "You must have a confirmed email to log on.";
+            //         return View("Error");
+            //     }
+            // }
+
+            // This doesn't count login failures towards account lockout
+            // To enable password failures to trigger account lockout, change to shouldLockout: true
+            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToLocal(returnUrl);
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
                 case SignInStatus.Failure:
-                    return RedirectToAction("Login", "Account");
+                default:
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                    return View(model);
             }
-
-            return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Logout()
         {
-            AuthenticationManager.SignOut();
+            _authenticationManager.SignOut();
             return RedirectToAction("Index", "Home");
         }
 
@@ -113,16 +142,40 @@ namespace Presentation.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            var user = await UserManager.FindByEmailAsync(model.Email);
-            if (user == null || !(await _userManager.IsEmailConfirmedAsync(user.Id)))
+            if (ModelState.IsValid)
             {
-                // Handle "user not found"
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user.Id)))
+                {
+                    // Don't reveal that the user does not exist or is not confirmed.
+                    return View("ForgotPasswordConfirmation");
+                }
+
+                string code = await _userManager.GeneratePasswordResetTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                await _userManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
-            // Send email to the user with instructions on how to reset the password.
 
             // If it reaches this, then something failed and we redisplay the form.
             return View(model);
         }
 
+        private ActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error);
+            }
+        }
     }
 }
