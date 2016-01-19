@@ -2,9 +2,9 @@
 
 namespace Infrastructure.DataAccess
 {
-    public class ChangeSampleSeedInitializer : DropCreateDatabaseIfModelChanges<SampleContext>
+    public class ChangeSampleSeedInitializer : DropCreateDatabaseIfModelChanges<ApplicationContext>
     {
-        public override void InitializeDatabase(SampleContext context)
+        public override void InitializeDatabase(ApplicationContext context)
         {
             // If the database already exist, you may stumble into the following error.
             // The exception “Cannot drop database because it is currently in use” can raise.
@@ -17,7 +17,7 @@ namespace Infrastructure.DataAccess
             base.InitializeDatabase(context);
         }
 
-        protected override void Seed(SampleContext context)
+        protected override void Seed(ApplicationContext context)
         {
             SeedHelper.Seed(context);
         }

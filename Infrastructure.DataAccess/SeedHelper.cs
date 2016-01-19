@@ -6,7 +6,7 @@ namespace Infrastructure.DataAccess
 {
     public static class SeedHelper
     {
-        public static void Seed(SampleContext context)
+        public static void Seed(ApplicationContext context)
         {
             for (var i = 0; i <= 10; i++)
             {

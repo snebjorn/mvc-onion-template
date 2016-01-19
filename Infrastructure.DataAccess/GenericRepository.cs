@@ -11,10 +11,10 @@ namespace Infrastructure.DataAccess
     public class GenericRepository<T> : IGenericRepository<T>
         where T : class
     {
-        private readonly SampleContext _context;
+        private readonly ApplicationContext _context;
         private readonly DbSet<T> _dbSet;
 
-        public GenericRepository(SampleContext context)
+        public GenericRepository(ApplicationContext context)
         {
             _context = context;
             _dbSet = context.Set<T>();

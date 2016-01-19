@@ -5,27 +5,27 @@ using System.Data.Entity;
 
 namespace Infrastructure.DataAccess
 {
-    public class SampleContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationContext : IdentityDbContext<ApplicationUser>
     {
         // throwIfV1Schema is used when upgrading Identity in a database from 1 to 2.
         // It's a one time thing and can be safely removed.
-        public SampleContext()
+        public ApplicationContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
-            // Database.SetInitializer<SampleContext>(null);
+            // Database.SetInitializer<ApplicationContext>(null);
             // The database initializer will create the database and the specified tables.
             // If you're using an existing database with code first, don't execute any logic at all.
 
-            // Database.SetInitializer(new CreateDatabaseIfNotExists<SampleContext>()); // Default, will run if nothing is done.
+            // Database.SetInitializer(new CreateDatabaseIfNotExists<ApplicationContext>()); // Default, will run if nothing is done.
             // The default option. When the application runs the first time, entity framework will create
             // a code first database if it does not already exist. If the database exists and you have done modifications
             // this will throw an InvalidOperationException.
 
-            // Database.SetInitializer(new DropCreateDatabaseAlways<SampleContext>());
+            // Database.SetInitializer(new DropCreateDatabaseAlways<ApplicationContext>());
             // This option, as the name suggests, will always drop and recreate the database when the application runs the first time.
             // All tables will be deleted as the database is dropped.
 
-            // Database.SetInitializer(new DropCreateDatabaseIfModelChanges<SampleContext>());
+            // Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ApplicationContext>());
             // This option will drop and recreate the database if there are any changes to the model.
 
             // Alternatively, you can create your own initializer and pass it as the argument.
@@ -46,9 +46,9 @@ namespace Infrastructure.DataAccess
             }
         }
 
-        public static SampleContext Create()
+        public static ApplicationContext Create()
         {
-            return new SampleContext();
+            return new ApplicationContext();
         }
 
         // Define you conceptual model here. Entity Framework will include these types and all their references.

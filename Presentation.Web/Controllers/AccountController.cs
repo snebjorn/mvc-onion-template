@@ -10,6 +10,7 @@ using Presentation.Web.Models.Account;
 
 namespace Presentation.Web.Controllers
 {
+    //[RequireHttps]
     public class AccountController : Controller
     {
         // Standard asp.net classes to manage users.
@@ -43,17 +44,17 @@ namespace Presentation.Web.Controllers
                 if (result.Succeeded)
                 {
                     // Comment the following line to prevent log in until the user is confirmed.
-                    await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    //await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
-                    // string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account");
+                    string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account");
 
-                    // ViewBag.Message = "Check your email and confirm your account, you must be confirmed before you can log in.";
+                    ViewBag.Message = "Check your email and confirm your account, you must be confirmed before you can log in.";
 
-                    // return View("Info");
+                    return View("Info");
 
-                    return RedirectToAction("Index", "Home");
+                    //return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
             }
@@ -62,11 +63,11 @@ namespace Presentation.Web.Controllers
             return View(model);
         }
 
-        private async Task<string> SendEmailConfirmationTokenAsync(string userID, string subject)
+        private async Task<string> SendEmailConfirmationTokenAsync(string userId, string subject)
         {
-            string code = await _userManager.GenerateEmailConfirmationTokenAsync(userID);
-            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = userID, code = code }, protocol: Request.Url.Scheme);
-            await _userManager.SendEmailAsync(userID, subject, "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+            string code = await _userManager.GenerateEmailConfirmationTokenAsync(userId);
+            var callbackUrl = Url.Action(nameof(ConfirmEmail), "Account", new { userId = userId, code = code }, protocol: Request.Url.Scheme);
+            await _userManager.SendEmailAsync(userId, subject, "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
             return callbackUrl;
         }
@@ -95,17 +96,17 @@ namespace Presentation.Web.Controllers
             }
 
             // Uncomment to require the user to have a confirmed email before they can log on.
-            // var user = await _userManager.FindByNameAsync(model.Email);
-            // if (user != null)
-            // {
-            //     if (!await _userManager.IsEmailConfirmedAsync(user.Id))
-            //     {
-            //         string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account-Resend");
-            //
-            //         ViewBag.ErrorMessage = "You must have a confirmed email to log on.";
-            //         return View("Error");
-            //     }
-            // }
+            var user = await _userManager.FindByNameAsync(model.Email);
+            if (user != null)
+            {
+                if (!await _userManager.IsEmailConfirmedAsync(user.Id))
+                {
+                    string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account-Resend");
+
+                    ViewBag.ErrorMessage = "You must have a confirmed email to log on.";
+                    return View("Error");
+                }
+            }
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true

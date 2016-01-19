@@ -11,7 +11,7 @@ namespace Infrastructure.DataAccess
     {
         private readonly DbContext _context;
 
-        public UnitOfWork(SampleContext context)
+        public UnitOfWork(ApplicationContext context)
         {
             _context = context;
         }
