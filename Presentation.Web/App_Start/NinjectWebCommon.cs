@@ -15,13 +15,10 @@ namespace Presentation.Web.App_Start
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
     using Microsoft.Owin.Security;
-    using Microsoft.Owin.Security.DataProtection;
     using Microsoft.AspNet.Identity.Owin;
     using RazorEngine.Templating;
-    using System.Net.Mail;
     using Mail;
-    using Core.DomainModel;
-    using System.Data.Entity;
+
     public static class NinjectWebCommon
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
@@ -80,21 +77,12 @@ namespace Presentation.Web.App_Start
             // Identity
             kernel.Bind(typeof(IUserStore<>)).To(typeof(UserStore<>)).InRequestScope().WithConstructorArgument("context", kernel.Get<ApplicationContext>());
             kernel.Bind<IAuthenticationManager>().ToMethod(c => HttpContext.Current.GetOwinContext().Authentication).InRequestScope();
-            kernel.Bind<IDataProtectionProvider>()
-                .To<DpapiDataProtectionProvider>()
-                .InRequestScope()
-                .WithConstructorArgument("ApplicationName");
-
-            kernel.Bind<ApplicationUserManager>().ToSelf().InRequestScope()
-                .WithPropertyValue("UserTokenProvider",
-                    new DataProtectorTokenProvider<ApplicationUser>(
-                        kernel.Get<IDataProtectionProvider>().Create("EmailConfirmation")));
+            kernel.Bind<ApplicationUserManager>().ToMethod(c => HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>());
 
             // Mail
-            //kernel.Bind<IRazorEngineService>().ToMethod(m => RazorEngineService.Create());
-            //kernel.Bind<SmtpClient>().ToSelf();
-            //kernel.Bind<IMailHandler>().To<MailHandler>();
-            //kernel.Bind<IIdentityMessageService>().To<EmailService>();
+            kernel.Bind<IRazorEngineService>().ToMethod(m => RazorEngineService.Create());
+            kernel.Bind<IMailHandler>().To<MailHandler>();
+            kernel.Bind<IIdentityMessageService>().To<EmailService>();
         }
     }
 }

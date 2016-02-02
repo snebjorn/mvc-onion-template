@@ -30,6 +30,8 @@ namespace Presentation.Web.Controllers
         /// </summary>
         /// <param name="unitOfWork"></param>
         /// <param name="studentRepository"></param>
+        /// <param name="emailService"></param>
+        /// <param name="mailHandler"></param>
         public StudentController(IUnitOfWork unitOfWork, IGenericRepository<Student> studentRepository, IIdentityMessageService emailService, IMailHandler mailHandler)
         {
             _studentRepository = studentRepository;

@@ -3,7 +3,6 @@ using System.Net.Mail;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
-using Postal;
 
 namespace Presentation.Web.App_Start
 {
@@ -34,7 +33,7 @@ namespace Presentation.Web.App_Start
 
             try
             {
-                _smtpClient.SendAsync(mailMessage, null);
+                return _smtpClient.SendMailAsync(mailMessage);
             }
             catch (Exception)
             {
@@ -43,8 +42,6 @@ namespace Presentation.Web.App_Start
                 // Right now this check is redundant, as it throws on the next line.
                 throw;
             }
-
-            return Task.FromResult(0);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Core.DomainModel;
 using Microsoft.AspNet.Identity;
@@ -48,7 +49,7 @@ namespace Presentation.Web.Controllers
 
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
-                    string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account");
+                    var callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account");
 
                     ViewBag.Message = "Check your email and confirm your account, you must be confirmed before you can log in.";
 
@@ -65,16 +66,42 @@ namespace Presentation.Web.Controllers
 
         private async Task<string> SendEmailConfirmationTokenAsync(string userId, string subject)
         {
-            string code = await _userManager.GenerateEmailConfirmationTokenAsync(userId);
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(userId);
             var callbackUrl = Url.Action(nameof(ConfirmEmail), "Account", new { userId = userId, code = code }, protocol: Request.Url.Scheme);
             await _userManager.SendEmailAsync(userId, subject, "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
             return callbackUrl;
         }
 
-        public ActionResult ConfirmEmail()
+        // GET: /Account/ConfirmEmail
+        [AllowAnonymous]
+        public async Task<ActionResult> ConfirmEmail(string userId, string code)
         {
-            return View();
+            if (userId == null || code == null)
+            {
+                return View("Error");
+            }
+            IdentityResult result;
+            try
+            {
+                result = await _userManager.ConfirmEmailAsync(userId, code);
+            }
+            catch (InvalidOperationException ioe)
+            {
+                // ConfirmEmailAsync throws when the userId is not found.
+                ViewBag.errorMessage = ioe.Message;
+                return View("Error");
+            }
+
+            if (result.Succeeded)
+            {
+                return View();
+            }
+
+            // If we got this far, something failed.
+            AddErrors(result);
+            ViewBag.errorMessage = "ConfirmEmail failed";
+            return View("Error");
         }
 
         [AllowAnonymous]
