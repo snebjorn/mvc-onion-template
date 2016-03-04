@@ -12,7 +12,7 @@ namespace Infrastructure.DataAccess
             // A trick is to override the InitializeDatabase method and to alter the database.
             // This tells the database to close all connections and to rollback any open transactions.
             context.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction,
-                string.Format("ALTER DATABASE {0} SET SINGLE_USER WITH ROLLBACK IMMEDIATE",
+                string.Format("ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE",
                     context.Database.Connection.Database));
             base.InitializeDatabase(context);
         }
