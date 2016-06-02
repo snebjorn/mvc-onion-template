@@ -18,6 +18,7 @@ namespace Presentation.Web.Controllers
         private readonly IIdentityMessageService _emailService;
         private readonly IMailHandler _mailHandler;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
         // Hardcoded pagingsize
         private const int PageSize = 3;
@@ -32,11 +33,12 @@ namespace Presentation.Web.Controllers
         /// <param name="studentRepository"></param>
         /// <param name="emailService"></param>
         /// <param name="mailHandler"></param>
-        public StudentController(IUnitOfWork unitOfWork, IGenericRepository<Student> studentRepository, IIdentityMessageService emailService, IMailHandler mailHandler)
+        public StudentController(IUnitOfWork unitOfWork, IGenericRepository<Student> studentRepository, IIdentityMessageService emailService, IMailHandler mailHandler, IMapper mapper)
         {
             _studentRepository = studentRepository;
             _emailService = emailService;
             _mailHandler = mailHandler;
+            _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
 
@@ -61,7 +63,7 @@ namespace Presentation.Web.Controllers
                     new PagedData<NewStudentViewModel>()
                     {
                         // Always configure automapper into mapping viewmodels against domainmodels.
-                        Data = Mapper.Map<List<Student>, List<NewStudentViewModel>>(_studentRepository.AsQueryable().OrderBy(p => p.Name).Take(PageSize).ToList()).ToList(),
+                        Data = _mapper.Map<List<Student>, List<NewStudentViewModel>>(_studentRepository.AsQueryable().OrderBy(p => p.Name).Take(PageSize).ToList()).ToList(),
                         NumberOfPages = PagingsSizeHelper()
                     }
             };
@@ -80,7 +82,7 @@ namespace Presentation.Web.Controllers
                 PagedStudents = new PagedData<NewStudentViewModel>()
                 {
                     // Always configure automapper into mapping viewmodels against domainmodels.
-                    Data = Mapper.Map<List<Student>, List<NewStudentViewModel>>(_studentRepository.AsQueryable().OrderBy(p => p.Name).Skip(PageSize * (page - 1)).Take(PageSize).ToList()),
+                    Data = _mapper.Map<List<Student>, List<NewStudentViewModel>>(_studentRepository.AsQueryable().OrderBy(p => p.Name).Skip(PageSize * (page - 1)).Take(PageSize).ToList()),
                     NumberOfPages = PagingsSizeHelper()
                 }
             };
@@ -98,7 +100,7 @@ namespace Presentation.Web.Controllers
         {
             // Configure automapper into mapping viewmodels against domainmodels.
             // This can also be done conversely.
-            var student = Mapper.Map<Student>(model);
+            var student = _mapper.Map<Student>(model);
             student.CreatedOn = DateTime.Now;
             student.ModifiedOn = DateTime.Now;
             _studentRepository.Insert(student);
@@ -113,12 +115,12 @@ namespace Presentation.Web.Controllers
         /// <returns></returns>
         public List<NewStudentViewModel> IndexStudentsById()
         {
-            return Mapper.Map<List<Student>, List<NewStudentViewModel>>(_studentRepository.AsQueryable().OrderBy(p => p.Id).ToList());
+            return _mapper.Map<List<Student>, List<NewStudentViewModel>>(_studentRepository.AsQueryable().OrderBy(p => p.Id).ToList());
         }
 
         public List<NewStudentViewModel> IndexStudentsByName()
         {
-            return Mapper.Map<List<Student>, List<NewStudentViewModel>>(_studentRepository.AsQueryable().OrderBy(p => p.Name).ToList());
+            return _mapper.Map<List<Student>, List<NewStudentViewModel>>(_studentRepository.AsQueryable().OrderBy(p => p.Name).ToList());
         }
 
         /// <summary>
@@ -137,7 +139,7 @@ namespace Presentation.Web.Controllers
             if (student == null)
                 return HttpNotFound();
 
-            var viewmodel = Mapper.Map<NewStudentViewModel>(student);
+            var viewmodel = _mapper.Map<NewStudentViewModel>(student);
 
             return Json(viewmodel, JsonRequestBehavior.AllowGet);
         }
