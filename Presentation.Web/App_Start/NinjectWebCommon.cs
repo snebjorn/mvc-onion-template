@@ -1,3 +1,5 @@
+using AutoMapper;
+
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Presentation.Web.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(Presentation.Web.App_Start.NinjectWebCommon), "Stop")]
 
@@ -83,6 +85,12 @@ namespace Presentation.Web.App_Start
             kernel.Bind<IRazorEngineService>().ToMethod(m => RazorEngineService.Create());
             kernel.Bind<IMailHandler>().To<MailHandler>();
             kernel.Bind<IIdentityMessageService>().To<EmailService>();
+
+            kernel.Bind<MapperConfiguration>()
+             .ToSelf()
+             .WithConstructorArgument<Action<IMapperConfiguration>>(
+                 cfg => new MappingConfig(cfg));
+            kernel.Bind<IMapper>().ToMethod(mapper => kernel.Get<MapperConfiguration>().CreateMapper()).InSingletonScope();
         }
     }
 }
