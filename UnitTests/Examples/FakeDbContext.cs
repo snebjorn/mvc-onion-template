@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
+using AutoMapper;
 using Faker;
 using Microsoft.AspNet.Identity;
 using NSubstitute;
@@ -11,7 +12,6 @@ using Presentation.Web.Models.Student;
 using Xunit;
 using Core.DomainServices;
 using Core.DomainModel;
-using AutoMapper;
 using IndexViewModel = Presentation.Web.Models.Student.IndexViewModel;
 
 namespace UnitTests.Examples
@@ -70,11 +70,16 @@ namespace UnitTests.Examples
             // Substitute for mailHandler.
             var mailHandler = Substitute.For<IMailHandler>();
 
-            // Pass the context to the controller, and use this for testing.
-            _controller = new StudentController(_unitOfWork, _repo, mailService, mailHandler);
 
-            // The controller uses automapper.
-            Mapper.CreateMap<NewStudentViewModel, Student>().ReverseMap();
+            // Create mapper with required mapping used by student controller
+            var config = new MapperConfiguration(cfg => {
+                cfg.CreateMap<NewStudentViewModel, Student>().ReverseMap();
+            });
+
+            var mapper = config.CreateMapper();
+
+            // Pass the context to the controller, and use this for testing.
+            _controller = new StudentController(_unitOfWork, _repo, mailService, mailHandler, mapper);
         }
 
         [Fact]
