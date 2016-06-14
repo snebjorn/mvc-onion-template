@@ -14,7 +14,6 @@ namespace Presentation.Web.App_Start
                         "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
                       "~/Content/site.css"));
 
             // When in debug configuration bundling is disabled by default and enabled for release.

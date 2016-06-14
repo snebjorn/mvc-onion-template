@@ -1,0 +1,41 @@
+﻿// mixin to target specific viewport widths. Mixin is structured to function as bootstraps grid system,
+// meaning that css applies to the target width and up, except xxs, which only applies to widths smaller than xs)
+@mixin respond-to($media) {
+    @if $media == xxs {
+        @media only screen and (max-width: ($screen-xs - 1)) {
+            @content;
+        }
+    }
+
+    @if $media == xs {
+        @media only screen and (min-width: $screen-xs) {
+            @content;
+        }
+    }
+    @else if $media == sm {
+        @media only screen and (min-width: $screen-sm) {
+            @content;
+        }
+    }
+    @else if $media == md {
+
+        @media only screen and (min-width: $screen-md) {
+            @content;
+        }
+    }
+    @else if $media == lg {
+        @media only screen and (min-width: $screen-lg) {
+            @content;
+        }
+    }
+    @else if $media == mobile {
+        @media only screen and (max-width: ($grid-float-breakpoint - 1)) {
+            @content;
+        }
+    }
+    @else if $media == desk {
+        @media only screen and (min-width: $grid-float-breakpoint) {
+            @content;
+        }
+    }
+}

@@ -1,0 +1,33 @@
+﻿//mixin example. Mixins can to seen as sass functions. They generate css based on the input you call them with
+@mixin btn-custom-mixin ($background, $color) {
+    background: $background;
+    color: $color;
+    -moz-transition: background .1s ease-in-out;
+    -o-transition: background .1s ease-in-out;
+    -webkit-transition: background .1s ease-in-out;
+    transition: background .1s ease-in-out;
+
+    //ampersand references parent.
+    &:hover {
+        background:         lighten($background, 10%);
+        color:              lighten($color, 10%);
+    }
+}
+
+//placeholder example. Placeholder classes are static - they return the same css no matter where you call them.
+//placeholder classes cannot be called directly, but must be extended in another class. You can view placeholder classes
+//as sass "base classes" where core functionality can be implemented once and used multiple places.
+%btn-custom-placeholder {
+    background:             #424242;
+    color:                  #f0f0f0;
+    -moz-transition: background .1s ease-in-out;
+    -o-transition: background .1s ease-in-out;
+    -webkit-transition: background .1s ease-in-out;
+    transition: background .1s ease-in-out;
+
+    //ampersand references parent.
+    &:hover {
+        background: lighten(#424242, 10%);
+        color: lighten(#f0f0f0, 10%);
+    }
+}

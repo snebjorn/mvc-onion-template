@@ -1,0 +1,15 @@
+﻿//use index file to import your view specific partials.
+
+@import "_btns.scss";
+
+
+//media query example
+//always write your css from smallest width to largest.
+//That way you utilize the mixin and overwrites the css for smaller widths as you move to larger
+
+@include respond-to(sm) {
+    //css written here applies to small width and up
+}
+@include respond-to(lg){
+    //css written here applies to large width and up
+}
