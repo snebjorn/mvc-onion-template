@@ -87,9 +87,8 @@ namespace Presentation.Web.App_Start
             kernel.Bind<IIdentityMessageService>().To<EmailService>();
 
             kernel.Bind<MapperConfiguration>()
-             .ToSelf()
-             .WithConstructorArgument<Action<IMapperConfiguration>>(
-                 cfg => new MappingConfig(cfg));
+                .ToSelf()
+                .WithConstructorArgument<Action<IMapperConfigurationExpression>>(cfg => cfg.AddProfile<MappingProfile>());
             kernel.Bind<IMapper>().ToMethod(mapper => kernel.Get<MapperConfiguration>().CreateMapper()).InSingletonScope();
         }
     }
