@@ -1,0 +1,17 @@
+﻿//example of nesting. using nesting can ease specificity issues, but also adds complexity. Use it when it makes sense.
+.jumbotron {
+    .btn-index-jumbotron {
+
+        //parent referencer
+        &.mixin {
+            //include mixin declared in utility/_buttons file;
+            //use mixins when you need to change the input, eg. when you need the generated css to change from call to call.
+            @include btn-custom-mixin($teal-base, #fafafa);
+        }
+
+        &.placeholder {
+            //use placeholder when you de not need to change the generated css
+            @extend %btn-custom-placeholder;
+        }
+    }
+}

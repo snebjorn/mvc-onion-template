@@ -1,0 +1,15 @@
+﻿//Import own site variables
+@import "Site/utility/_site-variables.scss";
+
+//import bootstrap
+@import "_bootstrap.scss";
+
+//import custom sass files - use 1 folder pr. view in order to maintain LIFT principle.
+
+@import "Site/utility/_buttons.scss";
+@import "Site/utility/_media-queries.scss";
+@import "Site/index/_index.scss";
+
+
+//you can do a lot more with sass than shown here. For example you can use math, for loops and lists.
+//to learn more, go to http://sass-lang.com/guide or RTFM.
