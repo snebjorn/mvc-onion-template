@@ -11,9 +11,9 @@ namespace Infrastructure.DataAccess.Seeding
     /// The functions uses an interface as argument, so either give your context this interface
     /// or change the class, and adapt/change the functions to match the context you want to seed.
     /// </summary>
-    public class SeedingHelper
+    internal class FakeDataHelper
     {
-        public static Student Student()
+        public static Student GetStudent()
         {
             return new Student()
             {
@@ -23,7 +23,7 @@ namespace Infrastructure.DataAccess.Seeding
             };
         }
 
-        public static Course Course(List<Student> students)
+        public static Course GetCourse(List<Student> students)
         {
             return new Course()
             {
@@ -32,7 +32,7 @@ namespace Infrastructure.DataAccess.Seeding
             };
         }
 
-        public static Teacher Teacher(List<Course> courses)
+        public static Teacher GetTeacher(List<Course> courses)
         {
             return new Teacher()
             {
@@ -42,7 +42,7 @@ namespace Infrastructure.DataAccess.Seeding
 
         }
 
-        public static ClassRoom ClassRoom(Course course)
+        public static ClassRoom GetClassRoom(Course course)
         {
             return new ClassRoom()
             {
